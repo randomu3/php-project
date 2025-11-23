@@ -1,0 +1,9 @@
+# Allow image access
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Require all granted
+</FilesMatch>
+
+# Deny access to other files
+<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif|webp)$)">
+    Require all denied
+</FilesMatch>

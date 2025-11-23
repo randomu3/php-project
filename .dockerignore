@@ -1,0 +1,7 @@
+src/vendor/
+src/composer.lock
+.git
+.gitignore
+README.md
+.env
+*.log
