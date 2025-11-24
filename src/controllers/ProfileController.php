@@ -11,6 +11,7 @@ use PDOException;
 
 use function logActivity;
 use function notify;
+use function sendEmailVerification;
 
 /**
  *  Profile Controller
@@ -209,6 +210,13 @@ class ProfileController
         try {
             $db = getDB();
 
+            // Получаем текущий email
+            $stmt = $db->prepare("SELECT email, username FROM users WHERE id = ?");
+            $stmt->execute([$_SESSION['user_id']]);
+            $currentUser = $stmt->fetch();
+            $currentEmail = $currentUser['email'];
+            $emailChanged = ($email !== $currentEmail);
+
             // Проверяем, не занято ли имя пользователя другим пользователем
             $stmt = $db->prepare("SELECT id FROM users WHERE username = ? AND id != ?");
             $stmt->execute([$username, $_SESSION['user_id']]);
@@ -216,29 +224,66 @@ class ProfileController
                 return ['success' => '', 'error' => 'Это имя пользователя уже занято'];
             }
 
-            // Проверяем, не занят ли email другим пользователем
-            $stmt = $db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
-            $stmt->execute([$email, $_SESSION['user_id']]);
-            if ($stmt->fetch()) {
-                return ['success' => '', 'error' => 'Этот email уже используется'];
+            // Если email изменился
+            if ($emailChanged) {
+                // Проверяем, не занят ли email другим пользователем
+                $stmt = $db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+                $stmt->execute([$email, $_SESSION['user_id']]);
+                if ($stmt->fetch()) {
+                    return ['success' => '', 'error' => 'Этот email уже используется'];
+                }
+
+                // Создаем токен подтверждения
+                $token = bin2hex(random_bytes(32));
+                $expiresAt = date('Y-m-d H:i:s', strtotime('+24 hours'));
+
+                // Удаляем старые токены для этого пользователя
+                $stmt = $db->prepare("DELETE FROM email_verifications WHERE user_id = ?");
+                $stmt->execute([$_SESSION['user_id']]);
+
+                // Сохраняем новый токен
+                $stmt = $db->prepare("
+                    INSERT INTO email_verifications (user_id, new_email, token, expires_at)
+                    VALUES (?, ?, ?, ?)
+                ");
+                $stmt->execute([$_SESSION['user_id'], $email, $token, $expiresAt]);
+
+                // Отправляем письмо подтверждения
+                sendEmailVerification($email, $username, $token);
+
+                // Обновляем только username (email обновится после подтверждения)
+                $stmt = $db->prepare("UPDATE users SET username = ? WHERE id = ?");
+                $stmt->execute([$username, $_SESSION['user_id']]);
+
+                // Обновляем имя в сессии
+                $_SESSION['username'] = $username;
+
+                // Логируем
+                logActivity(ActivityActions::USER_UPDATE_PROFILE, sprintf('Запрошено изменение email на %s', $email), 'user', $_SESSION['user_id']);
+
+                // Уведомление
+                notify($_SESSION['user_id'], NotificationTypes::INFO, 'Подтвердите email', 'Письмо с подтверждением отправлено на новый адрес', '/profile', NotificationIcons::INFO);
+
+                return ['success' => 'Имя обновлено. Проверьте новый email для подтверждения изменения адреса.', 'error' => ''];
+            } else {
+                // Обновляем только username
+                $stmt = $db->prepare("UPDATE users SET username = ? WHERE id = ?");
+                $stmt->execute([$username, $_SESSION['user_id']]);
+
+                // Обновляем имя в сессии
+                $_SESSION['username'] = $username;
+
+                // Логируем
+                logActivity(ActivityActions::USER_UPDATE_PROFILE, sprintf('Обновлен username: %s', $username), 'user', $_SESSION['user_id']]);
+
+                // Уведомление
+                notify($_SESSION['user_id'], NotificationTypes::SUCCESS, 'Профиль обновлен', 'Ваше имя пользователя успешно обновлено', '/profile', NotificationIcons::SUCCESS);
+
+                return ['success' => 'Профиль успешно обновлен', 'error' => ''];
             }
 
-            // Обновляем данные
-            $stmt = $db->prepare("UPDATE users SET username = ?, email = ? WHERE id = ?");
-            $stmt->execute([$username, $email, $_SESSION['user_id']]);
-
-            // Обновляем имя в сессии
-            $_SESSION['username'] = $username;
-
-            // Логируем изменение профиля
-            logActivity(ActivityActions::USER_UPDATE_PROFILE, sprintf('Обновлен профиль: username=%s, email=%s', $username, $email), 'user', $_SESSION['user_id']);
-
-            // Отправляем уведомление
-            notify($_SESSION['user_id'], NotificationTypes::SUCCESS, 'Профиль обновлен', 'Ваши данные успешно обновлены', '/profile', NotificationIcons::SUCCESS);
-
-            return ['success' => 'Профиль успешно обновлен', 'error' => ''];
-
-        } catch (PDOException) {
+        } catch (PDOException $e) {
+            error_log("Profile update error: " . $e->getMessage());
             return ['success' => '', 'error' => 'Ошибка базы данных. Попробуйте позже.'];
         }
     }
