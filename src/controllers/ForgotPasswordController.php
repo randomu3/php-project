@@ -4,6 +4,8 @@ namespace AuraUI\Controllers;
 
 use PDOException;
 
+use function sendPasswordResetEmail;
+
 /**
  *  Forgot Password Controller
  *

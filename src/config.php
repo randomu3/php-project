@@ -27,6 +27,9 @@ require_once __DIR__ . '/helpers/ActivityLogger.php';
 require_once __DIR__ . '/helpers/NotificationManager.php';
 require_once __DIR__ . '/helpers/ImageUploader.php';
 
+// Подключаем email функции
+require_once __DIR__ . '/email.php';
+
 // Создаем алиасы для обратной совместимости (для использования в views без namespace)
 class_alias('AuraUI\Helpers\CDN', 'CDN');
 class_alias('AuraUI\Helpers\Minifier', 'Minifier');
@@ -42,7 +45,18 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_secure', 0); // Поставить 1 если используете HTTPS
     ini_set('session.use_strict_mode', 1);
     ini_set('session.cookie_samesite', 'Strict');
+    ini_set('session.gc_maxlifetime', 3600); // 1 час
+    ini_set('session.cookie_lifetime', 0); // До закрытия браузера
     session_start();
+    
+    // Проверка валидности сессии
+    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 3600)) {
+        // Сессия истекла (более 1 часа неактивности)
+        session_unset();
+        session_destroy();
+        session_start();
+    }
+    $_SESSION['LAST_ACTIVITY'] = time();
 }
 
 // Подключение к БД
@@ -126,7 +140,8 @@ function getDB()
 
 function isLoggedIn()
 {
-    return isset($_SESSION['user_id']);
+    // Проверяем не только наличие user_id, но и что он не пустой
+    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) && is_numeric($_SESSION['user_id']);
 }
 
 function requireLogin()
