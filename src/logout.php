@@ -7,7 +7,7 @@ session_start();
 $userId = $_SESSION['user_id'] ?? null;
 
 // ПОЛНОСТЬЮ очищаем все данные сессии
-$_SESSION = array();
+$_SESSION = [];
 
 // Удаляем cookie сессии на клиенте (КРИТИЧНО!)
 $sessionName = session_name();
@@ -26,6 +26,7 @@ session_destroy();
 require_once 'config.php';
 
 use AuraUI\Helpers\ActivityActions;
+
 use function logActivity;
 
 // Логируем выход (если был залогинен)

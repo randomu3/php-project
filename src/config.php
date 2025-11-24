@@ -48,7 +48,7 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.gc_maxlifetime', 3600); // 1 час
     ini_set('session.cookie_lifetime', 0); // До закрытия браузера
     session_start();
-    
+
     // Проверка валидности сессии
     if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 3600)) {
         // Сессия истекла (более 1 часа неактивности)

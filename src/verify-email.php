@@ -3,11 +3,8 @@
 require_once __DIR__ . '/config.php';
 
 use AuraUI\Helpers\ActivityActions;
-use AuraUI\Helpers\NotificationTypes;
 use AuraUI\Helpers\NotificationIcons;
-
-use function logActivity;
-use function notify;
+use AuraUI\Helpers\NotificationTypes;
 
 $token = $_GET['token'] ?? '';
 $error = '';
@@ -18,7 +15,7 @@ if (empty($token)) {
 } else {
     try {
         $db = getDB();
-        
+
         // Проверяем токен
         $stmt = $db->prepare("
             SELECT ev.id, ev.user_id, ev.new_email, u.username, u.email as old_email
@@ -28,35 +25,35 @@ if (empty($token)) {
         ");
         $stmt->execute([$token]);
         $verification = $stmt->fetch();
-        
+
         if (!$verification) {
             $error = 'Ссылка подтверждения недействительна или истекла.';
         } else {
             // Проверяем, не занят ли уже новый email
             $stmt = $db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
             $stmt->execute([$verification['new_email'], $verification['user_id']]);
-            
+
             if ($stmt->fetch()) {
                 $error = 'Этот email уже используется другим пользователем.';
             } else {
                 // Обновляем email
                 $stmt = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
                 $stmt->execute([$verification['new_email'], $verification['user_id']]);
-                
+
                 // Удаляем использованный токен
                 $stmt = $db->prepare("DELETE FROM email_verifications WHERE id = ?");
                 $stmt->execute([$verification['id']]);
-                
+
                 // Логируем
-                logActivity(
+                \logActivity(
                     ActivityActions::USER_UPDATE_PROFILE,
                     sprintf('Email изменен с %s на %s', $verification['old_email'], $verification['new_email']),
                     'user',
                     $verification['user_id']
                 );
-                
+
                 // Уведомление
-                notify(
+                \notify(
                     $verification['user_id'],
                     NotificationTypes::SUCCESS,
                     'Email подтвержден',
@@ -64,7 +61,7 @@ if (empty($token)) {
                     '/profile',
                     NotificationIcons::SUCCESS
                 );
-                
+
                 $success = 'Email успешно подтвержден и изменен!';
             }
         }

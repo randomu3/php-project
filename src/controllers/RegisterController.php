@@ -2,6 +2,7 @@
 
 namespace AuraUI\Controllers;
 
+use AuraUI\Helpers\EmailValidator;
 use PDOException;
 
 /**
@@ -61,8 +62,10 @@ class RegisterController
             return ['error' => 'Имя пользователя должно быть от 3 до 50 символов', 'success' => '', 'formData' => $formData];
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return ['error' => 'Неверный формат email', 'success' => '', 'formData' => $formData];
+        // Валидация email (проверка формата, временных доменов и существования)
+        $emailValidation = EmailValidator::validate($email);
+        if (!$emailValidation['valid']) {
+            return ['error' => $emailValidation['error'], 'success' => '', 'formData' => $formData];
         }
 
         if (strlen($password) < 8) {

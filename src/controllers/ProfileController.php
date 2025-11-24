@@ -3,9 +3,11 @@
 namespace AuraUI\Controllers;
 
 use AuraUI\Helpers\ActivityActions;
+use AuraUI\Helpers\EmailValidator;
 use AuraUI\Helpers\ImageUploader;
 use AuraUI\Helpers\NotificationIcons;
 use AuraUI\Helpers\NotificationTypes;
+use AuraUI\Core\RateLimiter;
 use Exception;
 use PDOException;
 
@@ -226,11 +228,48 @@ class ProfileController
 
             // Если email изменился
             if ($emailChanged) {
+                // Rate limiting: максимум 3 изменения email в час
+                $rateLimiter = new RateLimiter();
+                $rateLimitKey = 'email_change_' . $_SESSION['user_id'];
+                
+                if (!$rateLimiter->check($rateLimitKey, 3, 3600)) {
+                    return [
+                        'success' => '',
+                        'error' => 'Слишком много попыток изменения email. Попробуйте через час.'
+                    ];
+                }
+
+                // Валидация email (проверка на временные домены и существование)
+                $emailValidation = EmailValidator::validate($email);
+                if (!$emailValidation['valid']) {
+                    return ['success' => '', 'error' => $emailValidation['error']];
+                }
+
                 // Проверяем, не занят ли email другим пользователем
                 $stmt = $db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
                 $stmt->execute([$email, $_SESSION['user_id']]);
                 if ($stmt->fetch()) {
                     return ['success' => '', 'error' => 'Этот email уже используется'];
+                }
+
+                // Проверяем, не было ли недавно отправлено письмо на этот email
+                $stmt = $db->prepare("
+                    SELECT created_at FROM email_verifications 
+                    WHERE user_id = ? AND new_email = ? 
+                    ORDER BY created_at DESC LIMIT 1
+                ");
+                $stmt->execute([$_SESSION['user_id'], $email]);
+                $lastRequest = $stmt->fetch();
+                
+                if ($lastRequest) {
+                    $timeSinceLastRequest = time() - strtotime($lastRequest['created_at']);
+                    if ($timeSinceLastRequest < 300) { // 5 минут
+                        $minutesLeft = ceil((300 - $timeSinceLastRequest) / 60);
+                        return [
+                            'success' => '',
+                            'error' => "Письмо уже отправлено на этот адрес. Подождите {$minutesLeft} мин."
+                        ];
+                    }
                 }
 
                 // Создаем токен подтверждения
@@ -259,10 +298,22 @@ class ProfileController
                 $_SESSION['username'] = $username;
 
                 // Логируем
-                logActivity(ActivityActions::USER_UPDATE_PROFILE, sprintf('Запрошено изменение email на %s', $email), 'user', $_SESSION['user_id']);
+                logActivity(
+                    ActivityActions::USER_UPDATE_PROFILE,
+                    sprintf('Запрошено изменение email на %s', $email),
+                    'user',
+                    $_SESSION['user_id']
+                );
 
                 // Уведомление
-                notify($_SESSION['user_id'], NotificationTypes::INFO, 'Подтвердите email', 'Письмо с подтверждением отправлено на новый адрес', '/profile', NotificationIcons::INFO);
+                notify(
+                    $_SESSION['user_id'],
+                    NotificationTypes::INFO,
+                    'Подтвердите email',
+                    'Письмо с подтверждением отправлено на новый адрес',
+                    '/profile',
+                    NotificationIcons::INFO
+                );
 
                 return ['success' => 'Имя обновлено. Проверьте новый email для подтверждения изменения адреса.', 'error' => ''];
             } else {
@@ -274,10 +325,22 @@ class ProfileController
                 $_SESSION['username'] = $username;
 
                 // Логируем
-                logActivity(ActivityActions::USER_UPDATE_PROFILE, sprintf('Обновлен username: %s', $username), 'user', $_SESSION['user_id']]);
+                logActivity(
+                    ActivityActions::USER_UPDATE_PROFILE,
+                    sprintf('Обновлен username: %s', $username),
+                    'user',
+                    $_SESSION['user_id']
+                );
 
                 // Уведомление
-                notify($_SESSION['user_id'], NotificationTypes::SUCCESS, 'Профиль обновлен', 'Ваше имя пользователя успешно обновлено', '/profile', NotificationIcons::SUCCESS);
+                notify(
+                    $_SESSION['user_id'],
+                    NotificationTypes::SUCCESS,
+                    'Профиль обновлен',
+                    'Ваше имя пользователя успешно обновлено',
+                    '/profile',
+                    NotificationIcons::SUCCESS
+                );
 
                 return ['success' => 'Профиль успешно обновлен', 'error' => ''];
             }

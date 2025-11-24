@@ -3,9 +3,10 @@
 namespace AuraUI\Controllers;
 
 use AuraUI\Helpers\ActivityActions;
-use PDOException;
 
 use function logActivity;
+
+use PDOException;
 
 /**
  *  Login Controller

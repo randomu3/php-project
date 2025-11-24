@@ -45,7 +45,7 @@ class ImageUploader
     {
         // Установить абсолютный путь к директории загрузок
         $this->uploadDir = __DIR__ . '/../uploads/avatars/';
-        
+
         // Создать директорию если не существует
         if (!is_dir($this->uploadDir)) {
             mkdir($this->uploadDir, 0755, true);
