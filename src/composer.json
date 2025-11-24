@@ -1,5 +1,20 @@
 {
+    "name": "auraui/auth-system",
+    "description": "PHP Authentication System with Admin Panel",
+    "type": "project",
     "require": {
+        "php": ">=8.0",
         "resend/resend-php": "^0.13.0"
+    },
+    "require-dev": {
+        "rector/rector": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.90"
+    },
+    "autoload": {
+        "psr-4": {
+            "AuraUI\\Controllers\\": "controllers/",
+            "AuraUI\\Core\\": "core/",
+            "AuraUI\\Helpers\\": "helpers/"
+        }
     }
 }

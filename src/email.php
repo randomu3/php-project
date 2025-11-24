@@ -1,15 +1,17 @@
 <?php
-function sendEmail($to, $subject, $html) {
+
+function sendEmail($to, $subject, $html)
+{
     try {
         $resend = \Resend::client(RESEND_API_KEY);
-        
+
         $result = $resend->emails->send([
             'from' => FROM_NAME . ' <' . FROM_EMAIL . '>',
             'to' => [$to],
             'subject' => $subject,
             'html' => $html,
         ]);
-        
+
         // Логируем успешную отправку
         error_log("✅ Email sent successfully to: {$to}, Subject: {$subject}, ID: " . ($result->id ?? 'N/A'));
         return true;
@@ -20,9 +22,10 @@ function sendEmail($to, $subject, $html) {
     }
 }
 
-function sendWelcomeEmail($email, $username) {
+function sendWelcomeEmail($email, $username)
+{
     $subject = 'Добро пожаловать!';
-    
+
     $html = '
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px;">
         <div style="background: white; padding: 30px; border-radius: 8px;">
@@ -37,14 +40,15 @@ function sendWelcomeEmail($email, $username) {
             </p>
         </div>
     </div>';
-    
+
     return sendEmail($email, $subject, $html);
 }
 
-function sendPasswordResetEmail($email, $username, $token) {
+function sendPasswordResetEmail($email, $username, $token)
+{
     $resetLink = "http://" . $_SERVER['HTTP_HOST'] . "/reset_password?token=" . $token;
     $subject = 'Восстановление пароля';
-    
+
     $html = '
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 10px;">
         <div style="background: white; padding: 30px; border-radius: 8px;">
@@ -72,11 +76,12 @@ function sendPasswordResetEmail($email, $username, $token) {
             </p>
         </div>
     </div>';
-    
+
     return sendEmail($email, $subject, $html);
 }
 
-function sendNewsletterEmail($email, $subject, $message) {
+function sendNewsletterEmail($email, $subject, $message)
+{
     // Красивый шаблон для рассылки новостей
     $html = '
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 10px;">
@@ -103,6 +108,6 @@ function sendNewsletterEmail($email, $subject, $message) {
             </p>
         </div>
     </div>';
-    
+
     return sendEmail($email, $subject, $html);
 }

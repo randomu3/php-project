@@ -1,17 +1,38 @@
 <?php
-require_once __DIR__ . '/../config.php';
 
-class RoleManager {
+namespace AuraUI\Helpers;
+
+use PDOException;
+
+/**
+ *  Role Manager
+ *
+ * @package AuraUI\Helpers
+ */
+class RoleManager
+{
+    /**
+     * Db
+     *
+     * @var mixed
+     */
     private $db;
-    
-    public function __construct() {
+
+    /**
+     *   construct
+     */
+    public function __construct()
+    {
         $this->db = getDB();
     }
-    
+
     /**
-     * Проверить, есть ли у пользователя роль
+     * Has Role
+     *
+     * @return bool True on success, false on failure
      */
-    public function hasRole($userId, $roleName) {
+    public function hasRole(): bool
+    {
         $stmt = $this->db->prepare("
             SELECT COUNT(*) as count
             FROM user_roles ur
@@ -19,14 +40,18 @@ class RoleManager {
             WHERE ur.user_id = ? AND r.name = ?
         ");
         $stmt->execute([$userId, $roleName]);
+
         $result = $stmt->fetch();
         return $result['count'] > 0;
     }
-    
+
     /**
-     * Проверить, есть ли у пользователя право
+     * Has Permission
+     *
+     * @return bool True on success, false on failure
      */
-    public function hasPermission($userId, $permissionName) {
+    public function hasPermission(): bool
+    {
         $stmt = $this->db->prepare("
             SELECT COUNT(*) as count
             FROM user_roles ur
@@ -35,14 +60,18 @@ class RoleManager {
             WHERE ur.user_id = ? AND p.name = ?
         ");
         $stmt->execute([$userId, $permissionName]);
+
         $result = $stmt->fetch();
         return $result['count'] > 0;
     }
-    
+
     /**
-     * Получить все роли пользователя
+     * Get User Roles
+     *
+     * @param  $userId User ID
      */
-    public function getUserRoles($userId) {
+    public function getUserRoles($userId)
+    {
         $stmt = $this->db->prepare("
             SELECT r.*
             FROM roles r
@@ -52,11 +81,14 @@ class RoleManager {
         $stmt->execute([$userId]);
         return $stmt->fetchAll();
     }
-    
+
     /**
-     * Получить все права пользователя
+     * Get User Permissions
+     *
+     * @param  $userId User ID
      */
-    public function getUserPermissions($userId) {
+    public function getUserPermissions($userId)
+    {
         $stmt = $this->db->prepare("
             SELECT DISTINCT p.*
             FROM permissions p
@@ -67,53 +99,66 @@ class RoleManager {
         $stmt->execute([$userId]);
         return $stmt->fetchAll();
     }
-    
+
     /**
-     * Назначить роль пользователю
+     * Assign Role
+     *
+     * @param  $userId User ID
+     * @param  $roleId Parameter
      */
-    public function assignRole($userId, $roleId) {
+    public function assignRole($userId, $roleId)
+    {
         try {
             $stmt = $this->db->prepare("
                 INSERT IGNORE INTO user_roles (user_id, role_id)
                 VALUES (?, ?)
             ");
             return $stmt->execute([$userId, $roleId]);
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             return false;
         }
     }
-    
+
     /**
-     * Удалить роль у пользователя
+     * Remove Role
+     *
+     * @param  $userId User ID
+     * @param  $roleId Parameter
      */
-    public function removeRole($userId, $roleId) {
+    public function removeRole($userId, $roleId)
+    {
         $stmt = $this->db->prepare("
             DELETE FROM user_roles
             WHERE user_id = ? AND role_id = ?
         ");
         return $stmt->execute([$userId, $roleId]);
     }
-    
+
     /**
-     * Получить все роли
+     * Get All Roles
      */
-    public function getAllRoles() {
+    public function getAllRoles()
+    {
         $stmt = $this->db->query("SELECT * FROM roles ORDER BY name");
         return $stmt->fetchAll();
     }
-    
+
     /**
-     * Получить все права
+     * Get All Permissions
      */
-    public function getAllPermissions() {
+    public function getAllPermissions()
+    {
         $stmt = $this->db->query("SELECT * FROM permissions ORDER BY category, name");
         return $stmt->fetchAll();
     }
-    
+
     /**
-     * Получить права роли
+     * Get Role Permissions
+     *
+     * @param  $roleId Parameter
      */
-    public function getRolePermissions($roleId) {
+    public function getRolePermissions($roleId)
+    {
         $stmt = $this->db->prepare("
             SELECT p.*
             FROM permissions p
@@ -126,19 +171,28 @@ class RoleManager {
 }
 
 // Глобальные функции для удобства
-function hasRole($roleName) {
-    if (!isLoggedIn()) return false;
+function hasRole($roleName)
+{
+    if (!isLoggedIn()) {
+        return false;
+    }
+
     $rm = new RoleManager();
-    return $rm->hasRole($_SESSION['user_id'], $roleName);
+    return $rm->hasRole();
 }
 
-function hasPermission($permissionName) {
-    if (!isLoggedIn()) return false;
+function hasPermission($permissionName)
+{
+    if (!isLoggedIn()) {
+        return false;
+    }
+
     $rm = new RoleManager();
-    return $rm->hasPermission($_SESSION['user_id'], $permissionName);
+    return $rm->hasPermission();
 }
 
-function requirePermission($permissionName) {
+function requirePermission($permissionName): void
+{
     if (!hasPermission($permissionName)) {
         http_response_code(403);
         die('Доступ запрещен. У вас нет необходимых прав.');

@@ -13,14 +13,20 @@ services:
       - /var/www/html/vendor
     depends_on:
       - db
+      - redis
     environment:
       DB_HOST: db
       DB_NAME: app_db
       DB_USER: app_user
       DB_PASS: app_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       RESEND_API_KEY: re_brMPxT9m_BEgFoPQucTe22E1QcAw5svTH
       FROM_EMAIL: onboarding@resend.dev
       FROM_NAME: Мой сайт
+      # CDN настройки (отключено по умолчанию)
+      CDN_ENABLED: "false"
+      CDN_URL: ""
       # Включаем отображение ошибок для разработки
       PHP_DISPLAY_ERRORS: 1
       PHP_ERROR_REPORTING: E_ALL
@@ -43,5 +49,15 @@ services:
       - "3306:3306"
     restart: unless-stopped
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+
 volumes:
   db_data:
+  redis_data:

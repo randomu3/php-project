@@ -1,10 +1,26 @@
 <?php
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../helpers/ActivityLogger.php';
 
-class LoginController {
-    
-    public function index() {
+namespace AuraUI\Controllers;
+
+use AuraUI\Helpers\ActivityActions;
+use PDOException;
+
+use function logActivity;
+
+/**
+ *  Login Controller
+ *
+ * @package AuraUI\Controllers
+ */
+class LoginController
+{
+    /**
+     * Index
+     *
+     * @return void
+     */
+    public function index(): void
+    {
         if (isLoggedIn()) {
             header('Location: /');
             exit;
@@ -23,7 +39,13 @@ class LoginController {
         require __DIR__ . '/../views/login.view.php';
     }
 
-    private function handleLogin() {
+    /**
+     * Handle Login
+     *
+     * @return array Data array
+     */
+    private function handleLogin(): array
+    {
         $error = '';
         $username = sanitizeInput($_POST['username'] ?? '');
         $password = $_POST['password'] ?? '';
@@ -46,38 +68,37 @@ class LoginController {
                 if ($user['locked_until'] && strtotime($user['locked_until']) > time()) {
                     return ['error' => 'Аккаунт временно заблокирован. Попробуйте позже.', 'username' => $username];
                 }
-                
+
                 if (password_verify($password, $user['password_hash'])) {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['username'] = $user['username'];
-                    
+
                     $stmt = $db->prepare("UPDATE users SET failed_attempts = 0, locked_until = NULL, last_login = NOW() WHERE id = ?");
                     $stmt->execute([$user['id']]);
-                    
+
                     // Логируем успешный вход
-                    logActivity(ActivityActions::USER_LOGIN, "Пользователь {$user['username']} вошел в систему", 'user', $user['id']);
-                    
+                    logActivity(ActivityActions::USER_LOGIN, sprintf('Пользователь %s вошел в систему', $user['username']), 'user', $user['id']);
+
                     session_regenerate_id(true);
                     header('Location: /');
                     exit;
-                } else {
-                    $failed_attempts = $user['failed_attempts'] + 1;
-                    $locked_until = null;
-                    
-                    if ($failed_attempts >= MAX_LOGIN_ATTEMPTS) {
-                        $locked_until = date('Y-m-d H:i:s', time() + LOCKOUT_TIME);
-                        $error = 'Слишком много неудачных попыток. Аккаунт заблокирован на 15 минут.';
-                    } else {
-                        $error = 'Неверное имя пользователя или пароль';
-                    }
-                    
-                    $stmt = $db->prepare("UPDATE users SET failed_attempts = ?, locked_until = ? WHERE id = ?");
-                    $stmt->execute([$failed_attempts, $locked_until, $user['id']]);
                 }
+
+                $failed_attempts = $user['failed_attempts'] + 1;
+                $locked_until = null;
+                if ($failed_attempts >= MAX_LOGIN_ATTEMPTS) {
+                    $locked_until = date('Y-m-d H:i:s', time() + LOCKOUT_TIME);
+                    $error = 'Слишком много неудачных попыток. Аккаунт заблокирован на 15 минут.';
+                } else {
+                    $error = 'Неверное имя пользователя или пароль';
+                }
+
+                $stmt = $db->prepare("UPDATE users SET failed_attempts = ?, locked_until = ? WHERE id = ?");
+                $stmt->execute([$failed_attempts, $locked_until, $user['id']]);
             } else {
                 $error = 'Неверное имя пользователя или пароль';
             }
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             $error = 'Ошибка базы данных. Обратитесь к администратору.';
         }
 

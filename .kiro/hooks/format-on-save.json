@@ -1,0 +1,8 @@
+{
+  "name": "Format and Fix PHP on Save",
+  "description": "Automatically format PHP code, fix PHPDoc duplicates, and add missing documentation when saving PHP files",
+  "trigger": "onSave",
+  "filePattern": "src/**/*.php",
+  "enabled": true,
+  "prompt": "Format this PHP file following these steps:\n\n1. REMOVE DUPLICATE PHPDoc blocks:\n   - If there are 2+ consecutive /** */ blocks before a method/constant/property, keep only ONE\n   - Example: Remove duplicates like:\n     /**\n      * Description\n      */\n     /**\n      * Description\n      */\n     public const X = 'y';\n   - Should become:\n     /**\n      * Description\n      */\n     public const X = 'y';\n\n2. FIX INDENTATION:\n   - Class constants: 4 spaces\n   - Class methods: 4 spaces\n   - Method content: 8 spaces (or more for nested blocks)\n\n3. ADD MISSING PHPDoc:\n   - Every method MUST have PHPDoc with @param and @return\n   - If method has return type hint but no @return tag, add it\n   - Return descriptions:\n     * void: (no description)\n     * bool: True on success, false on failure\n     * array: Array of data\n     * int: Integer value\n     * string: String value\n     * self: Current instance\n\n4. FOLLOW PSR-12:\n   - Opening braces on same line for methods\n   - One blank line between methods\n   - No more than 2 consecutive blank lines\n\n5. WRITE IN ENGLISH:\n   - All PHPDoc comments must be in English\n   - Ignore Russian text in code comments\n\nDO NOT:\n- Change code logic\n- Remove existing comments\n- Modify method signatures\n- Add unnecessary blank lines\n\nJust fix formatting, remove duplicates, and add missing @return tags."
+}

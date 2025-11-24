@@ -1,8 +1,14 @@
 <?php
+
 require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../helpers/ImageUploader.php';
-require_once __DIR__ . '/../../helpers/ActivityLogger.php';
-require_once __DIR__ . '/../../helpers/NotificationManager.php';
+
+use AuraUI\Helpers\ActivityActions;
+use AuraUI\Helpers\ImageUploader;
+use AuraUI\Helpers\NotificationIcons;
+use AuraUI\Helpers\NotificationTypes;
+
+use function logActivity;
+use function notify;
 
 header('Content-Type: application/json');
 
@@ -32,41 +38,43 @@ if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] === UPLOAD_ERR_NO_FI
 try {
     $uploader = new ImageUploader();
     $result = $uploader->uploadAvatar($_FILES['avatar'], $_SESSION['user_id']);
-    
+
     if (!$result['success']) {
         echo json_encode(['success' => false, 'error' => $result['error']]);
         exit;
     }
-    
+
     $db = getDB();
-    
+
     // Получить старый аватар для удаления
     $stmt = $db->prepare("SELECT avatar FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $oldAvatar = $stmt->fetchColumn();
-    
+
     // Обновить аватар в БД
     $stmt = $db->prepare("UPDATE users SET avatar = ? WHERE id = ?");
     $stmt->execute([$result['filename'], $_SESSION['user_id']]);
-    
+
     // Удалить старый аватар
     if ($oldAvatar) {
         $uploader->deleteAvatar($oldAvatar);
     }
-    
+
     // Логируем
     logActivity(ActivityActions::USER_UPDATE_PROFILE, "Загружен новый аватар", 'user', $_SESSION['user_id']);
-    
+
     // Уведомление
     notify($_SESSION['user_id'], NotificationTypes::SUCCESS, 'Аватар обновлен', 'Ваш аватар успешно загружен', '/profile', NotificationIcons::SUCCESS);
-    
+
     echo json_encode([
         'success' => true,
         'message' => 'Аватар успешно загружен',
         'avatar_url' => $result['path'] . '?t=' . time()
     ]);
-    
+    exit;
+
 } catch (Exception $e) {
     error_log("Avatar upload error: " . $e->getMessage());
     echo json_encode(['success' => false, 'error' => 'Ошибка загрузки аватара']);
+    exit;
 }

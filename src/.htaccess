@@ -64,6 +64,9 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^ %1 [R=301,L]
 
+# Service Worker (должен быть в корне)
+RewriteRule ^service-worker\.js$ service-worker.js [L]
+
 # Если файл существует, показываем его
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]

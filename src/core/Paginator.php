@@ -1,111 +1,172 @@
 <?php
+
+namespace AuraUI\Core;
+
 /**
- * Paginator - пагинация для больших списков
+ *  Paginator
+ *
+ * @package AuraUI\Core
  */
-class Paginator {
+class Paginator
+{
+    /**
+     * TotalItems
+     *
+     * @var mixed
+     */
     private $totalItems;
+
+    /**
+     * ItemsPerPage
+     *
+     * @var mixed
+     */
     private $itemsPerPage;
+
+    /**
+     * CurrentPage
+     *
+     * @var mixed
+     */
     private $currentPage;
-    private $totalPages;
-    
-    public function __construct($totalItems, $itemsPerPage = 20, $currentPage = 1) {
+
+    /**
+     * TotalPages
+     *
+     * @var float
+     */
+    private float $totalPages;
+
+    /**
+     *   construct
+     *
+     * @param  $totalItems Parameter
+     * @param  $itemsPerPage Parameter
+     * @param  $currentPage Parameter
+     */
+    public function __construct($totalItems, $itemsPerPage = 20, $currentPage = 1)
+    {
         $this->totalItems = max(0, (int)$totalItems);
         $this->itemsPerPage = max(1, (int)$itemsPerPage);
         $this->currentPage = max(1, (int)$currentPage);
         $this->totalPages = ceil($this->totalItems / $this->itemsPerPage);
-        
+
         // Корректируем текущую страницу если она больше максимальной
         if ($this->currentPage > $this->totalPages && $this->totalPages > 0) {
             $this->currentPage = $this->totalPages;
         }
     }
-    
+
     /**
-     * Получить OFFSET для SQL запроса
+     * Get Offset
+     *
+     * @return int|float
      */
-    public function getOffset() {
+    public function getOffset(): int|float
+    {
         return ($this->currentPage - 1) * $this->itemsPerPage;
     }
-    
+
     /**
-     * Получить LIMIT для SQL запроса
+     * Get Limit
      */
-    public function getLimit() {
+    public function getLimit()
+    {
         return $this->itemsPerPage;
     }
-    
+
     /**
-     * Получить текущую страницу
+     * Get Current Page
      */
-    public function getCurrentPage() {
+    public function getCurrentPage()
+    {
         return $this->currentPage;
     }
-    
+
     /**
-     * Получить общее количество страниц
+     * Get Total Pages
+     *
+     * @return float
      */
-    public function getTotalPages() {
+    public function getTotalPages(): float
+    {
         return $this->totalPages;
     }
-    
+
     /**
-     * Получить общее количество элементов
+     * Get Total Items
      */
-    public function getTotalItems() {
+    public function getTotalItems()
+    {
         return $this->totalItems;
     }
-    
+
     /**
-     * Есть ли предыдущая страница
+     * Has Previous
+     *
+     * @return bool True on success, false on failure
      */
-    public function hasPrevious() {
+    public function hasPrevious(): bool
+    {
         return $this->currentPage > 1;
     }
-    
+
     /**
-     * Есть ли следующая страница
+     * Has Next
+     *
+     * @return bool True on success, false on failure
      */
-    public function hasNext() {
+    public function hasNext(): bool
+    {
         return $this->currentPage < $this->totalPages;
     }
-    
+
     /**
-     * Получить номер предыдущей страницы
+     * Get Previous Page
+     *
+     * @return int Integer value
      */
-    public function getPreviousPage() {
+    public function getPreviousPage(): int
+    {
         return max(1, $this->currentPage - 1);
     }
-    
+
     /**
-     * Получить номер следующей страницы
+     * Get Next Page
+     *
+     * @return float|int
      */
-    public function getNextPage() {
+    public function getNextPage(): float|int
+    {
         return min($this->totalPages, $this->currentPage + 1);
     }
-    
+
     /**
-     * Получить массив номеров страниц для отображения
+     * Get Pages
+     *
+     * @return array Data array
      */
-    public function getPages($maxVisible = 7) {
+    public function getPages(): array
+    {
         if ($this->totalPages <= $maxVisible) {
             return range(1, $this->totalPages);
         }
-        
+
         $pages = [];
         $half = floor($maxVisible / 2);
-        
+
         $start = max(1, $this->currentPage - $half);
         $end = min($this->totalPages, $this->currentPage + $half);
-        
+
         // Корректируем если упираемся в начало или конец
         if ($this->currentPage <= $half) {
             $end = min($this->totalPages, $maxVisible);
         }
-        
+
         if ($this->currentPage >= $this->totalPages - $half) {
             $start = max(1, $this->totalPages - $maxVisible + 1);
         }
-        
+
         // Добавляем первую страницу и многоточие
         if ($start > 1) {
             $pages[] = 1;
@@ -113,58 +174,65 @@ class Paginator {
                 $pages[] = '...';
             }
         }
-        
+
         // Добавляем страницы
         for ($i = $start; $i <= $end; $i++) {
             $pages[] = $i;
         }
-        
+
         // Добавляем многоточие и последнюю страницу
         if ($end < $this->totalPages) {
             if ($end < $this->totalPages - 1) {
                 $pages[] = '...';
             }
+
             $pages[] = $this->totalPages;
         }
-        
+
         return $pages;
     }
-    
+
     /**
-     * Получить информацию о диапазоне элементов
+     * Get Items Range
+     *
+     * @return array Data array
      */
-    public function getItemsRange() {
+    public function getItemsRange(): array
+    {
         if ($this->totalItems == 0) {
             return [0, 0];
         }
-        
+
         $start = $this->getOffset() + 1;
         $end = min($this->totalItems, $start + $this->itemsPerPage - 1);
-        
+
         return [$start, $end];
     }
-    
+
     /**
-     * Рендер HTML пагинации
+     * Render
+     *
+     * @return string String value
      */
-    public function render($baseUrl = '') {
+    public function render(): string
+    {
         if ($this->totalPages <= 1) {
             return '';
         }
-        
+
         $pages = $this->getPages();
         [$start, $end] = $this->getItemsRange();
-        
+
         $html = '<div class="flex items-center justify-between mt-6">';
-        
+
         // Информация о элементах
         $html .= '<div class="text-sm text-slate-400">';
         $html .= sprintf('Показано %d-%d из %d', $start, $end, $this->totalItems);
         $html .= '</div>';
-        
+
         // Кнопки пагинации
         $html .= '<div class="flex gap-2">';
-        
+
         // Предыдущая
         if ($this->hasPrevious()) {
             $html .= sprintf(
@@ -173,7 +241,7 @@ class Paginator {
                 $this->getPreviousPage()
             );
         }
-        
+
         // Страницы
         foreach ($pages as $page) {
             if ($page === '...') {
@@ -192,7 +260,7 @@ class Paginator {
                 );
             }
         }
-        
+
         // Следующая
         if ($this->hasNext()) {
             $html .= sprintf(
@@ -201,10 +269,9 @@ class Paginator {
                 $this->getNextPage()
             );
         }
-        
+
         $html .= '</div>';
-        $html .= '</div>';
-        
-        return $html;
+
+        return $html . '</div>';
     }
 }

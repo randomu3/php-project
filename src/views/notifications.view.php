@@ -39,13 +39,16 @@
                             <!-- Иконка -->
                             <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center
                                 <?php
-                                    switch($notification['type']) {
-                                        case 'success': echo 'bg-green-500/20 text-green-400'; break;
-                                        case 'warning': echo 'bg-yellow-500/20 text-yellow-400'; break;
-                                        case 'error': echo 'bg-red-500/20 text-red-400'; break;
+                                    switch ($notification['type']) {
+                                        case 'success': echo 'bg-green-500/20 text-green-400';
+                                            break;
+                                        case 'warning': echo 'bg-yellow-500/20 text-yellow-400';
+                                            break;
+                                        case 'error': echo 'bg-red-500/20 text-red-400';
+                                            break;
                                         default: echo 'bg-blue-500/20 text-blue-400';
                                     }
-                                ?>
+                    ?>
                             ">
                                 <i data-lucide="<?= htmlspecialchars($notification['icon'] ?? 'bell') ?>" class="w-6 h-6"></i>
                             </div>
@@ -108,8 +111,12 @@ function markAsRead(notificationId) {
     $.post('/api/notifications/mark-read.php', { id: notificationId }, function(response) {
         if (response.success) {
             // Убираем индикатор непрочитанного
-            $('[data-notification-id="' + notificationId + '"]').removeClass('border-l-4 border-purple-500');
-            $('[data-notification-id="' + notificationId + '"] .badge-new').remove();
+            const $notification = $('[data-notification-id="' + notificationId + '"]');
+            $notification.removeClass('border-l-4 border-purple-500');
+            $notification.find('.badge-new').remove();
+            
+            // Убираем кнопку "Отметить прочитанным" для этого уведомления
+            $notification.find('button[onclick="markAsRead(' + notificationId + ')"]').remove();
             
             // Обновляем счетчик в заголовке
             updateUnreadCount();
@@ -128,11 +135,17 @@ function markAllAsRead() {
             $('.glass-panel').removeClass('border-l-4 border-purple-500');
             $('.badge-new').remove();
             
-            // Скрываем кнопку
+            // Убираем все кнопки "Отметить прочитанным"
+            $('button[onclick^="markAsRead"]').remove();
+            
+            // Скрываем кнопку "Прочитать все"
             $('button[onclick="markAllAsRead()"]').parent().hide();
             
             // Обновляем текст
-            $('p:contains("непрочитанных")').text('Все уведомления прочитаны');
+            $('.text-slate-400:contains("непрочитанных")').text('Все уведомления прочитаны');
+            
+            // Обновляем счетчик в колокольчике
+            updateUnreadCount();
             
             showNotification('Все уведомления прочитаны', 'success');
         }
@@ -144,11 +157,21 @@ function markAllAsRead() {
 function updateUnreadCount() {
     $.get('/api/notifications/count.php', function(response) {
         const count = response.count || 0;
+        const $statusText = $('.text-slate-400').first();
+        
         if (count > 0) {
-            $('p:contains("прочитаны")').text('У вас ' + count + ' непрочитанных уведомлений');
+            $statusText.text('У вас ' + count + ' непрочитанных уведомлений');
+            $('button[onclick="markAllAsRead()"]').parent().show();
         } else {
-            $('p:contains("непрочитанных")').text('Все уведомления прочитаны');
+            $statusText.text('Все уведомления прочитаны');
             $('button[onclick="markAllAsRead()"]').parent().hide();
+        }
+        
+        // Обновляем счетчик в колокольчике (если есть)
+        if (count > 0) {
+            $('.notification-badge').text(count).show();
+        } else {
+            $('.notification-badge').hide();
         }
     });
 }

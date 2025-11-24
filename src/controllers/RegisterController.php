@@ -1,10 +1,23 @@
 <?php
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../email.php';
 
-class RegisterController {
-    
-    public function index() {
+namespace AuraUI\Controllers;
+
+use PDOException;
+
+/**
+ *  Register Controller
+ *
+ * @package AuraUI\Controllers
+ */
+class RegisterController
+{
+    /**
+     * Index
+     *
+     * @return void
+     */
+    public function index(): void
+    {
         $error = '';
         $success = '';
         $formData = ['username' => '', 'email' => ''];
@@ -20,10 +33,15 @@ class RegisterController {
         require __DIR__ . '/../views/register.view.php';
     }
 
-    private function handleRegister() {
-        $error = '';
+    /**
+     * Handle Register
+     *
+     * @return array Data array
+     */
+    private function handleRegister(): array
+    {
         $success = '';
-        
+
         $username = sanitizeInput($_POST['username'] ?? '');
         $email = sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
@@ -59,7 +77,7 @@ class RegisterController {
             $db = getDB();
             $stmt = $db->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
             $stmt->execute([$username, $email]);
-            
+
             if ($stmt->fetch()) {
                 return ['error' => 'Пользователь с таким именем или email уже существует', 'success' => '', 'formData' => $formData];
             }
@@ -67,12 +85,12 @@ class RegisterController {
             $password_hash = password_hash($password, PASSWORD_ARGON2ID);
             $stmt = $db->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
             $stmt->execute([$username, $email, $password_hash]);
-            
+
             sendWelcomeEmail($email, $username);
-            
+
             $success = 'Регистрация успешна! Проверьте email и можете войти.';
             $formData = ['username' => '', 'email' => ''];
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             return ['error' => 'Ошибка регистрации', 'success' => '', 'formData' => $formData];
         }
 

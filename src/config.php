@@ -1,4 +1,5 @@
 <?php
+
 // Защита от повторного подключения
 if (defined('APP_CONFIG_LOADED')) {
     return;
@@ -14,6 +15,26 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 require_once __DIR__ . '/core/RateLimiter.php';
 require_once __DIR__ . '/core/Logger.php';
 require_once __DIR__ . '/core/Paginator.php';
+require_once __DIR__ . '/core/Cache.php';
+require_once __DIR__ . '/core/QueryCache.php';
+require_once __DIR__ . '/core/BatchProcessor.php';
+
+// Подключаем дополнительные классы оптимизации (из папки helpers)
+require_once __DIR__ . '/helpers/ImageOptimizer.php';
+require_once __DIR__ . '/helpers/Minifier.php';
+require_once __DIR__ . '/helpers/CDN.php';
+require_once __DIR__ . '/helpers/ActivityLogger.php';
+require_once __DIR__ . '/helpers/NotificationManager.php';
+require_once __DIR__ . '/helpers/ImageUploader.php';
+
+// Создаем алиасы для обратной совместимости (для использования в views без namespace)
+class_alias('AuraUI\Helpers\CDN', 'CDN');
+class_alias('AuraUI\Helpers\Minifier', 'Minifier');
+class_alias('AuraUI\Helpers\ImageOptimizer', 'ImageOptimizer');
+class_alias('AuraUI\Helpers\NotificationManager', 'NotificationManager');
+class_alias('AuraUI\Helpers\ActivityLogger', 'ActivityLogger');
+class_alias('AuraUI\Helpers\ImageUploader', 'ImageUploader');
+class_alias('AuraUI\Helpers\ActivityActions', 'ActivityActions');
 
 // Настройки безопасности сессии (до session_start)
 if (session_status() === PHP_SESSION_NONE) {
@@ -35,20 +56,21 @@ define('MAX_LOGIN_ATTEMPTS', 5);
 define('LOCKOUT_TIME', 900); // 15 минут в секундах
 
 // Версия статических ресурсов (автоматическая на основе времени изменения файлов)
-function getAssetVersion() {
+function getAssetVersion()
+{
     static $version = null;
-    
+
     if ($version !== null) {
         return $version;
     }
-    
+
     $files = [
         __DIR__ . '/assets/css/style.css',
         __DIR__ . '/assets/css/loader.css',
         __DIR__ . '/assets/js/app.js',
         __DIR__ . '/assets/js/loader.js'
     ];
-    
+
     $latestTime = 0;
     foreach ($files as $file) {
         if (file_exists($file)) {
@@ -58,7 +80,7 @@ function getAssetVersion() {
             }
         }
     }
-    
+
     // Используем timestamp последнего изменения как версию
     $version = $latestTime > 0 ? $latestTime : time();
     return $version;
@@ -71,7 +93,8 @@ define('RESEND_API_KEY', getenv('RESEND_API_KEY') ?: 're_brMPxT9m_BEgFoPQucTe22E
 define('FROM_EMAIL', getenv('FROM_EMAIL') ?: 'onboarding@resend.dev');
 define('FROM_NAME', getenv('FROM_NAME') ?: 'Мой сайт');
 
-function getDB() {
+function getDB()
+{
     static $pdo = null;
     if ($pdo === null) {
         try {
@@ -83,14 +106,17 @@ function getDB() {
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES => false,
-                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
+                    PDO::ATTR_PERSISTENT => true, // Connection pooling
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci",
+                    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                    PDO::ATTR_TIMEOUT => 5
                 ]
             );
-            
+
             // Явно устанавливаем кодировку после подключения
             $pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
             $pdo->exec("SET CHARACTER SET utf8mb4");
-            
+
         } catch (PDOException $e) {
             die("Ошибка подключения к БД");
         }
@@ -98,43 +124,47 @@ function getDB() {
     return $pdo;
 }
 
-function isLoggedIn() {
+function isLoggedIn()
+{
     return isset($_SESSION['user_id']);
 }
 
-function requireLogin() {
+function requireLogin()
+{
     if (!isLoggedIn()) {
         header('Location: /login');
         exit;
     }
 }
 
-function isAdmin() {
+function isAdmin()
+{
     if (!isLoggedIn()) {
         return false;
     }
-    
+
     $db = getDB();
     $stmt = $db->prepare("SELECT is_admin FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $user = $stmt->fetch();
-    
+
     // Явно приводим к boolean, так как MySQL может вернуть 0/1 как строку
     return $user && (bool)$user['is_admin'];
 }
 
-function requireAdmin() {
+function requireAdmin()
+{
     if (!isLoggedIn()) {
         header('Location: /login');
         exit;
     }
-    
+
     // Получаем данные пользователя один раз
     $db = getDB();
     $stmt = $db->prepare("SELECT is_admin FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $user = $stmt->fetch();
-    
+
     // Проверяем права
     if (!$user || !$user['is_admin']) {
         die('<html><head><title>Доступ запрещен</title></head><body style="font-family: Arial; text-align: center; padding: 50px;">
@@ -145,17 +175,20 @@ function requireAdmin() {
     }
 }
 
-function sanitizeInput($data) {
+function sanitizeInput($data)
+{
     return htmlspecialchars(strip_tags(trim($data)), ENT_QUOTES, 'UTF-8');
 }
 
-function generateCSRFToken() {
+function generateCSRFToken()
+{
     if (!isset($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
     return $_SESSION['csrf_token'];
 }
 
-function verifyCSRFToken($token) {
+function verifyCSRFToken($token)
+{
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }

@@ -5,24 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $pageTitle ?? 'Мой сайт' ?></title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://code.jquery.com">
+    
+    <!-- CDN preconnect (если включен) -->
+    <?= CDN::preconnectTags() ?>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Custom CSS with cache busting (через CDN если включен) -->
+    <link rel="stylesheet" href="<?= CDN::css('assets/css/style.css?v=' . ASSET_VERSION) ?>">
+    <link rel="stylesheet" href="<?= CDN::css('assets/css/loader.css?v=' . ASSET_VERSION) ?>">
+    
+    <!-- jQuery (загружаем ПЕРВЫМ, БЕЗ defer) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Tailwind CSS (после jQuery) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    
-    <!-- Custom CSS with cache busting -->
-    <link rel="stylesheet" href="/assets/css/style.css?v=<?= ASSET_VERSION ?>">
-    <link rel="stylesheet" href="/assets/css/loader.css?v=<?= ASSET_VERSION ?>">
-    
     <!-- Loader Script (inline для быстрой загрузки) -->
-    <script src="/assets/js/loader.js?v=<?= ASSET_VERSION ?>"></script>
+    <script src="<?= CDN::js('assets/js/loader.js?v=' . ASSET_VERSION) ?>"></script>
+    
+    <!-- Lazy Loading для изображений -->
+    <script src="<?= CDN::js('assets/js/lazy-load.js?v=' . ASSET_VERSION) ?>" defer></script>
+    
+    <!-- Service Worker для PWA -->
+    <script src="<?= CDN::js('assets/js/sw-register.js?v=' . ASSET_VERSION) ?>" defer></script>
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AuraUI">
     
     <!-- Дополнительные стили страницы -->
     <?php if (isset($additionalCSS)): ?>

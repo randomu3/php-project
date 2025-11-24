@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../../helpers/CacheHelper.php';
 
@@ -23,7 +24,7 @@ $stats = CacheHelper::getOPcacheStats();
 if ($stats) {
     $memory = $stats['memory_usage'];
     $statistics = $stats['opcache_statistics'];
-    
+
     echo json_encode([
         'success' => true,
         'data' => [

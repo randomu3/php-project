@@ -1,82 +1,121 @@
 <?php
 
+namespace AuraUI\Helpers;
+
 /**
- * CacheHelper - Утилиты для управления кешированием
+ *  Cache Helper
+ *
+ * @package AuraUI\Helpers
  */
-class CacheHelper {
-    
+class CacheHelper
+{
     /**
-     * Генерирует ETag для контента
+     * Generate E Tag
+     *
+     * @param  $content Parameter
+     *
+     * @return string String value
      */
-    public static function generateETag($content) {
+    public static function generateETag($content): string
+    {
         return md5($content);
     }
-    
+
     /**
-     * Проверяет ETag и отправляет 304 если не изменилось
+     * Check E Tag
+     *
+     * @param string $etag Parameter
+     *
+     * @return void
      */
-    public static function checkETag($etag) {
+    public static function checkETag(string $etag): void
+    {
         $clientETag = $_SERVER['HTTP_IF_NONE_MATCH'] ?? '';
-        
+
         if ($clientETag === $etag) {
             header('HTTP/1.1 304 Not Modified');
-            header("ETag: $etag");
+            header('ETag: ' . $etag);
             exit;
         }
-        
-        header("ETag: $etag");
+
+        header('ETag: ' . $etag);
     }
-    
+
     /**
-     * Устанавливает заголовки кеширования для статики
+     * Set Cache Headers
+     *
+     * @param  $maxAge Parameter
+     *
+     * @return void
      */
-    public static function setCacheHeaders($maxAge = 3600) {
-        header("Cache-Control: public, max-age=$maxAge");
+    public static function setCacheHeaders($maxAge = 3600): void
+    {
+        header('Cache-Control: public, max-age=' . $maxAge);
         header("Expires: " . gmdate('D, d M Y H:i:s', time() + $maxAge) . ' GMT');
     }
-    
+
     /**
-     * Устанавливает заголовки для динамического контента
+     * Set Dynamic Headers
+     *
+     * @param  $maxAge Parameter
+     *
+     * @return void
      */
-    public static function setDynamicHeaders($maxAge = 600) {
-        header("Cache-Control: public, max-age=$maxAge, must-revalidate");
+    public static function setDynamicHeaders($maxAge = 600): void
+    {
+        header(sprintf('Cache-Control: public, max-age=%s, must-revalidate', $maxAge));
         header("Expires: " . gmdate('D, d M Y H:i:s', time() + $maxAge) . ' GMT');
     }
-    
+
     /**
-     * Запрещает кеширование (для приватных данных)
+     * No Cache
+     *
+     * @return void
      */
-    public static function noCache() {
+    public static function noCache(): void
+    {
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
         header("Pragma: no-cache");
         header("Expires: 0");
     }
-    
+
     /**
-     * Очищает OPcache (для админов)
+     * Clear O Pcache
      */
-    public static function clearOPcache() {
+    public static function clearOPcache()
+    {
         if (function_exists('opcache_reset')) {
             return opcache_reset();
         }
+
         return false;
     }
-    
+
     /**
-     * Получает статистику OPcache
+     * Get O Pcache Stats
+     *
+     * @return array|false|null
      */
-    public static function getOPcacheStats() {
+    public static function getOPcacheStats(): array|false|null
+    {
         if (function_exists('opcache_get_status')) {
             return opcache_get_status(false);
         }
+
         return null;
     }
-    
+
     /**
-     * Генерирует версионированный URL для статики
+     * Asset
+     *
+     * @param string $path Parameter
+     * @param  $version Parameter
+     *
+     * @return string String value
      */
-    public static function asset($path, $version = null) {
-        $version = $version ?? ASSET_VERSION;
+    public static function asset(string $path, $version = null): string
+    {
+        $version ??= ASSET_VERSION;
         return $path . '?v=' . $version;
     }
 }

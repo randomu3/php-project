@@ -1,6 +1,4 @@
 <?php
-require_once __DIR__ . '/../../helpers/NotificationManager.php';
-
 $unreadCount = 0;
 $notifications = [];
 
@@ -63,13 +61,16 @@ if (isLoggedIn()) {
                             <!-- Иконка -->
                             <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
                                 <?php
-                                    switch($notification['type']) {
-                                        case 'success': echo 'bg-green-500/20 text-green-400'; break;
-                                        case 'warning': echo 'bg-yellow-500/20 text-yellow-400'; break;
-                                        case 'error': echo 'bg-red-500/20 text-red-400'; break;
+                                    switch ($notification['type']) {
+                                        case 'success': echo 'bg-green-500/20 text-green-400';
+                                            break;
+                                        case 'warning': echo 'bg-yellow-500/20 text-yellow-400';
+                                            break;
+                                        case 'error': echo 'bg-red-500/20 text-red-400';
+                                            break;
                                         default: echo 'bg-blue-500/20 text-blue-400';
                                     }
-                                ?>
+                    ?>
                             ">
                                 <i data-lucide="<?= htmlspecialchars($notification['icon'] ?? 'bell') ?>" class="w-4 h-4"></i>
                             </div>
@@ -189,15 +190,24 @@ function updateNotificationCount() {
 
 <?php
 // Вспомогательная функция для отображения времени
-function timeAgo($datetime) {
+function timeAgo($datetime)
+{
     $time = strtotime($datetime);
     $diff = time() - $time;
-    
-    if ($diff < 60) return 'только что';
-    if ($diff < 3600) return floor($diff / 60) . ' мин назад';
-    if ($diff < 86400) return floor($diff / 3600) . ' ч назад';
-    if ($diff < 604800) return floor($diff / 86400) . ' д назад';
-    
+
+    if ($diff < 60) {
+        return 'только что';
+    }
+    if ($diff < 3600) {
+        return floor($diff / 60) . ' мин назад';
+    }
+    if ($diff < 86400) {
+        return floor($diff / 3600) . ' ч назад';
+    }
+    if ($diff < 604800) {
+        return floor($diff / 86400) . ' д назад';
+    }
+
     return date('d.m.Y', $time);
 }
 ?>

@@ -3,3 +3,12 @@
 *.log
 src/vendor/
 src/composer.lock
+
+# PHPDocumentor
+docs/api/
+.phpdoc/
+phpDocumentor.phar
+
+# Rector
+.rector/
+rector.php
