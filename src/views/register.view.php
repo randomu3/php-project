@@ -122,6 +122,7 @@
     </footer>
 
     <script src="/assets/js/app.js?v=<?= ASSET_VERSION ?>"></script>
+    <script src="/assets/js/cookie-consent.js?v=<?= ASSET_VERSION ?>"></script>
     <script>lucide.createIcons();</script>
 </body>
 </html>

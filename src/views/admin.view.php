@@ -117,5 +117,6 @@
             }, 5000);
         }
     </script>
+    <script src="/assets/js/cookie-consent.js?v=<?= ASSET_VERSION ?>"></script>
 </body>
 </html>

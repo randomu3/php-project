@@ -1,6 +1,9 @@
     <!-- jQuery скрипты with cache busting -->
     <script src="/assets/js/app.js?v=<?= ASSET_VERSION ?>"></script>
     
+    <!-- Cookie Consent -->
+    <script src="/assets/js/cookie-consent.js?v=<?= ASSET_VERSION ?>"></script>
+    
     <!-- Инициализация Lucide иконок -->
     <script>
         if (typeof lucide !== 'undefined') {

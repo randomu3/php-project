@@ -23,6 +23,7 @@
             <a href="/" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors">На главную</a>
         </div>
     </div>
+    <script src="/assets/js/cookie-consent.js?v=<?= ASSET_VERSION ?>"></script>
     <script>lucide.createIcons();</script>
 </body>
 </html>

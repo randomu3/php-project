@@ -129,6 +129,7 @@
         &copy; <?= date('Y') ?> AuraUI Inc. Все права защищены.
     </footer>
 
+    <script src="/assets/js/cookie-consent.js?v=<?= ASSET_VERSION ?>"></script>
     <script>
         lucide.createIcons();
     </script>
