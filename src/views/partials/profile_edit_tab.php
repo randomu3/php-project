@@ -55,12 +55,12 @@
                 </div>
             </div>
 
-            <div class="flex gap-4 pt-4">
-                <button type="submit" class="flex-1 glass-button justify-center">
+            <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                <button type="submit" class="w-full sm:flex-1 glass-button justify-center">
                     <i data-lucide="save" class="w-4 h-4"></i>
                     Сохранить
                 </button>
-                <button type="button" onclick="switchTab('info')" class="glass-button-secondary px-6">
+                <button type="button" onclick="switchTab('info')" class="w-full sm:w-auto glass-button-secondary px-6">
                     Отмена
                 </button>
             </div>

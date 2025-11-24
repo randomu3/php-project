@@ -76,12 +76,12 @@
                 <span>После смены пароля ваша текущая сессия останется активной.</span>
             </div>
 
-            <div class="flex gap-4 pt-2">
-                <button type="submit" class="flex-1 glass-button justify-center">
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                <button type="submit" class="w-full sm:flex-1 glass-button justify-center">
                     <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                     Обновить пароль
                 </button>
-                <button type="button" onclick="switchTab('info')" class="glass-button-secondary px-6">
+                <button type="button" onclick="switchTab('info')" class="w-full sm:w-auto glass-button-secondary px-6">
                     Отмена
                 </button>
             </div>
