@@ -4,6 +4,13 @@
 src/vendor/
 src/composer.lock
 
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.gigaide/
+
 # Uploads (user content)
 src/uploads/
 uploads/

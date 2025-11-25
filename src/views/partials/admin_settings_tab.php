@@ -294,25 +294,28 @@ function renderTemplatesList(templates) {
     container.html(html);
     lucide.createIcons();
     
-    // Привязываем события через делегирование
-    container.off('click').on('click', '.template-info', function() {
+    // Привязываем события через делегирование (один раз)
+    container.off('click', '.template-info, .btn-preview, .btn-edit');
+    
+    container.on('click', '.template-info', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         const id = $(this).data('template-id');
-        console.log('Template info clicked, id:', id);
-        loadTemplate(id);
+        if (id) loadTemplate(id);
     });
     
     container.on('click', '.btn-preview', function(e) {
+        e.preventDefault();
         e.stopPropagation();
         const id = $(this).data('template-id');
-        console.log('Preview clicked, id:', id);
-        quickPreview(id);
+        if (id) quickPreview(id);
     });
     
     container.on('click', '.btn-edit', function(e) {
+        e.preventDefault();
         e.stopPropagation();
         const id = $(this).data('template-id');
-        console.log('Edit clicked, id:', id);
-        loadTemplate(id);
+        if (id) loadTemplate(id);
     });
 }
 

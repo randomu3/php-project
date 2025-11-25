@@ -106,23 +106,50 @@ try {
             $filename = 'backup_' . date('Y-m-d_H-i-s') . '.sql';
             $filepath = $backupDir . '/' . $filename;
             
-            // Экспорт через mysqldump
-            $host = DB_HOST;
-            $user = DB_USER;
-            $pass = DB_PASS;
-            $dbname = DB_NAME;
-            
-            $command = "mysqldump -h{$host} -u{$user} -p{$pass} {$dbname} > {$filepath} 2>&1";
-            exec($command, $output, $returnCode);
-            
-            if ($returnCode === 0 && file_exists($filepath)) {
+            try {
+                // Получаем список таблиц
+                $tables = $db->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+                
+                $sql = "-- AuraUI Database Backup\n";
+                $sql .= "-- Generated: " . date('Y-m-d H:i:s') . "\n";
+                $sql .= "-- Database: " . DB_NAME . "\n\n";
+                $sql .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
+                
+                foreach ($tables as $table) {
+                    // Структура таблицы
+                    $createTable = $db->query("SHOW CREATE TABLE `{$table}`")->fetch();
+                    $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
+                    $sql .= $createTable['Create Table'] . ";\n\n";
+                    
+                    // Данные таблицы
+                    $rows = $db->query("SELECT * FROM `{$table}`")->fetchAll(PDO::FETCH_ASSOC);
+                    if (count($rows) > 0) {
+                        $columns = array_keys($rows[0]);
+                        $columnList = '`' . implode('`, `', $columns) . '`';
+                        
+                        foreach ($rows as $row) {
+                            $values = array_map(function($val) use ($db) {
+                                if ($val === null) return 'NULL';
+                                return $db->quote($val);
+                            }, array_values($row));
+                            $sql .= "INSERT INTO `{$table}` ({$columnList}) VALUES (" . implode(', ', $values) . ");\n";
+                        }
+                        $sql .= "\n";
+                    }
+                }
+                
+                $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
+                
+                file_put_contents($filepath, $sql);
+                
                 $size = round(filesize($filepath) / 1024, 2);
                 echo json_encode([
                     'success' => true, 
                     'message' => "Резервная копия создана: {$filename} ({$size} KB)"
                 ]);
-            } else {
-                echo json_encode(['success' => false, 'error' => 'Ошибка создания резервной копии']);
+            } catch (Exception $e) {
+                error_log("Backup error: " . $e->getMessage());
+                echo json_encode(['success' => false, 'error' => 'Ошибка создания резервной копии: ' . $e->getMessage()]);
             }
             break;
             
