@@ -3,18 +3,19 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         <!-- Email Templates Editor -->
-        <div class="glass-panel p-6 rounded-2xl lg:col-span-2">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold flex items-center gap-2">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl lg:col-span-2">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <h3 class="text-base sm:text-lg font-semibold flex items-center gap-2">
                     <i data-lucide="mail" class="w-5 h-5 text-purple-400"></i>
-                    Редактор Email-шаблонов
+                    <span class="hidden sm:inline">Редактор Email-шаблонов</span>
+                    <span class="sm:hidden">Email шаблоны</span>
                 </h3>
                 <div class="flex gap-2">
-                    <button onclick="toggleVariablesHelp()" class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-lg text-sm transition-colors flex items-center gap-2" title="Справочник переменных">
-                        <i data-lucide="help-circle" class="w-4 h-4"></i> Переменные
+                    <button onclick="toggleVariablesHelp()" class="px-2 sm:px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-lg text-xs sm:text-sm transition-colors flex items-center gap-1 sm:gap-2" title="Справочник переменных">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i> <span class="hidden xs:inline">Переменные</span>
                     </button>
-                    <button onclick="createNewTemplate()" class="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg text-sm transition-colors flex items-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Новый шаблон
+                    <button onclick="createNewTemplate()" class="px-2 sm:px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg text-xs sm:text-sm transition-colors flex items-center gap-1 sm:gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden xs:inline">Новый</span>
                     </button>
                 </div>
             </div>
@@ -69,65 +70,65 @@
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 <!-- Templates List -->
                 <div class="space-y-3">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-sm text-slate-400">Выберите шаблон:</span>
                     </div>
-                    <div id="templates-list" class="space-y-2 max-h-[500px] overflow-y-auto pr-2">
-                        <div class="text-center text-slate-500 py-4">Загрузка...</div>
+                    <div id="templates-list" class="space-y-2 max-h-[300px] sm:max-h-[400px] xl:max-h-[500px] overflow-y-auto pr-1 sm:pr-2">
+                        <div class="text-center text-slate-500 py-4 text-sm">Загрузка...</div>
                     </div>
                 </div>
                 
                 <!-- Template Editor -->
-                <div class="lg:col-span-2">
+                <div class="xl:col-span-2">
                     <form id="template-form" class="space-y-4">
                         <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                         <input type="hidden" name="id" id="template-id" value="0">
                         
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
-                                <label class="block text-sm text-slate-400 mb-1">Название (slug)</label>
+                                <label class="block text-xs sm:text-sm text-slate-400 mb-1">Название (slug)</label>
                                 <input type="text" name="name" id="template-name" 
-                                    class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500/50 focus:outline-none"
+                                    class="w-full px-3 sm:px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500/50 focus:outline-none text-sm"
                                     placeholder="welcome_email">
                             </div>
                             <div>
-                                <label class="block text-sm text-slate-400 mb-1">Тема письма</label>
+                                <label class="block text-xs sm:text-sm text-slate-400 mb-1">Тема письма</label>
                                 <input type="text" name="subject" id="template-subject"
-                                    class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500/50 focus:outline-none"
+                                    class="w-full px-3 sm:px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500/50 focus:outline-none text-sm"
                                     placeholder="Добро пожаловать!">
                             </div>
                         </div>
                         
                         <div>
-                            <label class="block text-sm text-slate-400 mb-1">Описание</label>
+                            <label class="block text-xs sm:text-sm text-slate-400 mb-1">Описание</label>
                             <input type="text" name="description" id="template-description"
-                                class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500/50 focus:outline-none"
+                                class="w-full px-3 sm:px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500/50 focus:outline-none text-sm"
                                 placeholder="Письмо для новых пользователей">
                         </div>
                         
                         <div>
                             <div class="flex items-center justify-between mb-1">
-                                <label class="text-sm text-slate-400">HTML содержимое</label>
+                                <label class="text-xs sm:text-sm text-slate-400">HTML содержимое</label>
                                 <button type="button" onclick="insertVariable()" class="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1">
-                                    <i data-lucide="plus-circle" class="w-3 h-3"></i> Вставить переменную
+                                    <i data-lucide="plus-circle" class="w-3 h-3"></i> <span class="hidden sm:inline">Вставить</span> переменную
                                 </button>
                             </div>
-                            <textarea name="body" id="template-body" rows="12"
-                                class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500/50 focus:outline-none font-mono text-sm"
+                            <textarea name="body" id="template-body" rows="8"
+                                class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/5 border border-white/10 rounded-lg focus:border-purple-500/50 focus:outline-none font-mono text-xs sm:text-sm"
                                 placeholder="<h1>Привет, {{username}}!</h1>"></textarea>
                         </div>
                         
-                        <div class="flex flex-wrap gap-3">
-                            <button type="submit" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg font-medium hover:opacity-90 transition-opacity">
-                                Сохранить шаблон
+                        <div class="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
+                            <button type="submit" class="px-4 sm:px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg font-medium hover:opacity-90 transition-opacity text-sm">
+                                Сохранить
                             </button>
-                            <button type="button" onclick="previewTemplate()" class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors flex items-center gap-2">
-                                <i data-lucide="eye" class="w-4 h-4"></i> Предпросмотр
+                            <button type="button" onclick="previewTemplate()" class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm">
+                                <i data-lucide="eye" class="w-4 h-4"></i> Просмотр
                             </button>
-                            <button type="button" onclick="deleteTemplate()" id="btn-delete-template" class="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 rounded-lg text-red-400 transition-colors hidden flex items-center gap-2">
+                            <button type="button" onclick="deleteTemplate()" id="btn-delete-template" class="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 rounded-lg text-red-400 transition-colors hidden items-center justify-center gap-2 text-sm">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i> Удалить
                             </button>
                         </div>
@@ -261,7 +262,7 @@ function loadTemplates() {
 function renderTemplatesList(templates) {
     const container = $('#templates-list');
     if (templates.length === 0) {
-        container.html('<div class="text-center text-slate-500 py-4">Нет шаблонов. Создайте первый!</div>');
+        container.html('<div class="text-center text-slate-500 py-4 text-sm">Нет шаблонов. Создайте первый!</div>');
         return;
     }
     
@@ -270,21 +271,21 @@ function renderTemplatesList(templates) {
         const desc = t.description ? `<div class="text-xs text-slate-500 mt-1 truncate">${escapeHtml(t.description)}</div>` : '';
         html += `
             <div class="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-all template-item border border-transparent hover:border-purple-500/30" data-id="${t.id}">
-                <div class="flex items-center justify-between">
-                    <div class="flex-1 min-w-0 cursor-pointer template-info" data-template-id="${t.id}">
+                <div class="flex items-start justify-between gap-2">
+                    <div class="flex-1 min-w-0 cursor-pointer" onclick="loadTemplate(${t.id})">
                         <div class="font-medium text-sm flex items-center gap-2">
-                            <i data-lucide="file-text" class="w-4 h-4 text-purple-400"></i>
-                            ${escapeHtml(t.name)}
+                            <i data-lucide="file-text" class="w-4 h-4 text-purple-400 flex-shrink-0"></i>
+                            <span class="truncate">${escapeHtml(t.name)}</span>
                         </div>
                         <div class="text-xs text-slate-400 truncate mt-1">${escapeHtml(t.subject)}</div>
                         ${desc}
                     </div>
-                    <div class="flex gap-1 ml-2">
-                        <button type="button" class="btn-preview p-2 hover:bg-white/10 rounded-lg transition-colors" data-template-id="${t.id}" title="Быстрый просмотр">
-                            <i data-lucide="eye" class="w-4 h-4 text-slate-400 pointer-events-none"></i>
+                    <div class="flex gap-1 flex-shrink-0">
+                        <button type="button" onclick="event.stopPropagation(); quickPreview(${t.id})" class="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Быстрый просмотр">
+                            <i data-lucide="eye" class="w-4 h-4 text-slate-400"></i>
                         </button>
-                        <button type="button" class="btn-edit p-2 hover:bg-purple-500/20 rounded-lg transition-colors" data-template-id="${t.id}" title="Редактировать">
-                            <i data-lucide="pencil" class="w-4 h-4 text-purple-400 pointer-events-none"></i>
+                        <button type="button" onclick="event.stopPropagation(); loadTemplate(${t.id})" class="p-2 hover:bg-purple-500/20 rounded-lg transition-colors" title="Редактировать">
+                            <i data-lucide="pencil" class="w-4 h-4 text-purple-400"></i>
                         </button>
                     </div>
                 </div>
@@ -295,34 +296,7 @@ function renderTemplatesList(templates) {
     lucide.createIcons();
 }
 
-// Привязываем события через делегирование один раз при загрузке
-$(document).ready(function() {
-    const container = $('#templates-list');
-    
-    container.on('click', '.template-info', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const id = $(this).data('template-id');
-        console.log('Click on template-info, id:', id);
-        if (id) loadTemplate(id);
-    });
-    
-    container.on('click', '.btn-preview', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const id = $(this).data('template-id');
-        console.log('Click on btn-preview, id:', id);
-        if (id) quickPreview(id);
-    });
-    
-    container.on('click', '.btn-edit', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const id = $(this).data('template-id');
-        console.log('Click on btn-edit, id:', id);
-        if (id) loadTemplate(id);
-    });
-});
+
 
 function quickPreview(id) {
     $.get('/api/admin/settings.php?action=get_template&id=' + id, function(response) {
