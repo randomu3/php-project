@@ -1,7 +1,15 @@
+<!-- Page Header -->
+<div class="mb-6">
+    <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+        <div class="w-10 h-10 bg-pink-500/20 rounded-xl flex items-center justify-center">
+            <i data-lucide="send" class="w-5 h-5 text-pink-400"></i>
+        </div>
+        Email рассылка
+    </h1>
+    <p class="text-slate-400 text-sm mt-1 ml-13">Отправка писем пользователям</p>
+</div>
+
 <div class="max-w-3xl mx-auto">
-    <h2 class="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-2">
-        <i data-lucide="send" class="text-blue-400"></i> <span class="hidden sm:inline">Ручная рассылка</span><span class="sm:hidden">Рассылка</span>
-    </h2>
 
     <?php if ($emailSent): ?>
         <div class="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center gap-3 text-green-200 animate-fade-in">
@@ -19,12 +27,10 @@
     <!-- Табы для выбора типа рассылки -->
     <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
         <button onclick="switchEmailMode('single')" id="btn-single" class="email-mode-btn active px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap">
-            <i data-lucide="user" class="w-4 h-4 inline-block mr-1 sm:mr-2"></i>
-            <span class="hidden sm:inline">Одному пользователю</span><span class="sm:hidden">Одному</span>
+            Одному пользователю
         </button>
         <button onclick="switchEmailMode('newsletter')" id="btn-newsletter" class="email-mode-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap">
-            <i data-lucide="users" class="w-4 h-4 inline-block mr-1 sm:mr-2"></i>
-            <span class="hidden sm:inline">Рассылка новостей</span><span class="sm:hidden">Рассылка</span>
+            Рассылка новостей
         </button>
     </div>
 

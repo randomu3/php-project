@@ -1,19 +1,29 @@
 <!-- Таб: Безопасность -->
 <div id="tab-security" class="tab-content hidden animate-fade-in">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+            <div class="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center">
+                <i data-lucide="shield" class="w-5 h-5 text-red-400"></i>
+            </div>
+            Безопасность
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 ml-13">Журнал активности, попытки входа и блокировки</p>
+    </div>
     
     <!-- Подтабы -->
     <div class="flex flex-wrap gap-2 mb-6 overflow-x-auto pb-2">
         <button onclick="switchSecurityTab('activity')" id="btn-sec-activity" class="sec-tab-btn active px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap">
-            <i data-lucide="activity" class="w-4 h-4 inline mr-1"></i> <span class="hidden sm:inline">Журнал</span>
+            Журнал
         </button>
         <button onclick="switchSecurityTab('attempts')" id="btn-sec-attempts" class="sec-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap">
-            <i data-lucide="shield-alert" class="w-4 h-4 inline mr-1"></i> <span class="hidden sm:inline">Попытки</span>
+            Попытки входа
         </button>
         <button onclick="switchSecurityTab('blocked')" id="btn-sec-blocked" class="sec-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap">
-            <i data-lucide="ban" class="w-4 h-4 inline mr-1"></i> <span class="hidden sm:inline">IP</span>
+            Блокировка IP
         </button>
         <button onclick="switchSecurityTab('sessions')" id="btn-sec-sessions" class="sec-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap">
-            <i data-lucide="monitor" class="w-4 h-4 inline mr-1"></i> <span class="hidden sm:inline">Сессии</span>
+            Сессии
         </button>
     </div>
 
