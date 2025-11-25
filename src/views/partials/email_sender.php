@@ -9,7 +9,7 @@
     <p class="text-slate-400 text-sm mt-1 ml-13">Отправка писем пользователям</p>
 </div>
 
-<div class="max-w-3xl mx-auto">
+<div>
 
     <?php if ($emailSent): ?>
         <div class="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center gap-3 text-green-200 animate-fade-in">

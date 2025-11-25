@@ -1,5 +1,15 @@
 <!-- Таб: Аналитика -->
 <div id="tab-analytics" class="tab-content hidden animate-fade-in">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 text-blue-400"></i>
+            </div>
+            Аналитика
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 ml-13">Статистика регистраций, активности и использования системы</p>
+    </div>
     
     <!-- Карточки статистики -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6" id="stats-cards">

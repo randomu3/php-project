@@ -1,14 +1,21 @@
 <!-- TAB: FILE MANAGER -->
 <div id="tab-files" class="tab-content hidden animate-fade-in">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+            <div class="w-10 h-10 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                <i data-lucide="folder" class="w-5 h-5 text-yellow-400"></i>
+            </div>
+            Файловый менеджер
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 ml-13">Загрузка и управление файлами</p>
+    </div>
+
     <div class="glass-panel p-6 rounded-2xl">
         <!-- Header -->
         <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
             <div class="flex items-center gap-3">
-                <h3 class="text-lg font-semibold flex items-center gap-2">
-                    <i data-lucide="folder" class="w-5 h-5 text-yellow-400"></i>
-                    Файловый менеджер
-                </h3>
-                <span id="current-folder" class="text-sm text-slate-400">/uploads</span>
+                <span id="current-folder" class="text-sm text-slate-400 font-mono">/uploads</span>
             </div>
             <div class="flex gap-2">
                 <button onclick="showUploadModal()" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-sm transition-colors">

@@ -1,5 +1,16 @@
 <!-- TAB: ROLES & PERMISSIONS (RBAC) -->
 <div id="tab-roles" class="tab-content hidden animate-fade-in">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+            <div class="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                <i data-lucide="shield-check" class="w-5 h-5 text-purple-400"></i>
+            </div>
+            Роли и права доступа
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 ml-13">Управление ролями пользователей и разрешениями</p>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <!-- Roles List -->
         <div class="glass-panel p-4 sm:p-6 rounded-2xl">

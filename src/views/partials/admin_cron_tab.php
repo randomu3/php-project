@@ -1,5 +1,16 @@
 <!-- TAB: CRON & QUEUE -->
 <div id="tab-cron" class="tab-content hidden animate-fade-in">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+            <div class="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center">
+                <i data-lucide="clock" class="w-5 h-5 text-orange-400"></i>
+            </div>
+            Планировщик задач
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 ml-13">Cron задачи и очередь email рассылок</p>
+    </div>
+
     <!-- Sub-tabs -->
     <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
         <button onclick="switchCronTab('jobs')" id="cron-tab-jobs" class="cron-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm bg-purple-500/20 text-purple-300 whitespace-nowrap">Cron задачи</button>
@@ -189,34 +200,35 @@ function renderCronJobs(jobs) {
         const statusColor = statusColors[job.last_status] || 'bg-slate-500/20 text-slate-300';
         
         html += `
-            <div class="p-4 bg-slate-800/30 rounded-lg">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2">
-                            <span class="font-medium">${job.name}</span>
-                            <span class="px-2 py-0.5 rounded text-xs ${job.is_active ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-500/20 text-slate-400'}">${job.is_active ? 'Активна' : 'Отключена'}</span>
-                            ${job.last_status ? `<span class="px-2 py-0.5 rounded text-xs ${statusColor}">${job.last_status}</span>` : ''}
-                        </div>
-                        <div class="text-sm text-slate-500 mt-1">${job.description || ''}</div>
-                        <div class="text-xs text-slate-600 font-mono mt-1">${job.command}</div>
-                        <div class="flex gap-4 text-xs text-slate-500 mt-2">
-                            <span><i data-lucide="clock" class="w-3 h-3 inline"></i> ${job.schedule}</span>
-                            <span>Запусков: ${job.run_count}</span>
-                            <span>Ошибок: ${job.fail_count}</span>
-                            ${job.last_run_at ? `<span>Последний: ${job.last_run_at}</span>` : ''}
-                        </div>
+            <div class="p-3 sm:p-4 bg-slate-800/30 rounded-lg">
+                <div class="flex items-start justify-between gap-2 mb-2">
+                    <div class="min-w-0">
+                        <div class="font-medium text-sm sm:text-base truncate">${job.name}</div>
                     </div>
+                    <div class="flex gap-1 flex-shrink-0">
+                        <span class="px-2 py-0.5 rounded text-xs ${job.is_active ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-500/20 text-slate-400'}">${job.is_active ? 'Активна' : 'Откл.'}</span>
+                    </div>
+                </div>
+                <div class="text-xs sm:text-sm text-slate-500">${job.description || ''}</div>
+                <div class="text-xs text-slate-600 font-mono mt-1 truncate">${job.command}</div>
+                <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500 mt-2">
+                    <span><i data-lucide="clock" class="w-3 h-3 inline"></i> ${job.schedule}</span>
+                    <span>Запусков: ${job.run_count}</span>
+                    <span>Ошибок: ${job.fail_count}</span>
+                </div>
+                <div class="flex items-center justify-between mt-3 pt-2 border-t border-white/5">
+                    <div class="text-xs text-slate-600">${job.last_run_at ? 'Последний: ' + job.last_run_at : ''}</div>
                     <div class="flex gap-1">
-                        <button onclick="runJob(${job.id})" class="p-2 text-emerald-400 hover:bg-emerald-500/20 rounded-lg" title="Запустить">
+                        <button onclick="runJob(${job.id})" class="p-1.5 sm:p-2 text-emerald-400 hover:bg-emerald-500/20 rounded-lg" title="Запустить">
                             <i data-lucide="play" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="toggleJob(${job.id})" class="p-2 text-slate-400 hover:bg-slate-700 rounded-lg" title="${job.is_active ? 'Отключить' : 'Включить'}">
+                        <button onclick="toggleJob(${job.id})" class="p-1.5 sm:p-2 text-slate-400 hover:bg-slate-700 rounded-lg" title="${job.is_active ? 'Отключить' : 'Включить'}">
                             <i data-lucide="${job.is_active ? 'pause' : 'play-circle'}" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="showJobLogs(${job.id}, '${job.name}')" class="p-2 text-blue-400 hover:bg-blue-500/20 rounded-lg" title="История">
+                        <button onclick="showJobLogs(${job.id}, '${job.name}')" class="p-1.5 sm:p-2 text-blue-400 hover:bg-blue-500/20 rounded-lg" title="История">
                             <i data-lucide="history" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="deleteJob(${job.id})" class="p-2 text-red-400 hover:bg-red-500/20 rounded-lg" title="Удалить">
+                        <button onclick="deleteJob(${job.id})" class="p-1.5 sm:p-2 text-red-400 hover:bg-red-500/20 rounded-lg" title="Удалить">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -336,18 +348,18 @@ function renderEmailQueue(queue) {
         };
         
         html += `
-            <div class="flex items-center justify-between p-3 bg-slate-800/30 rounded-lg">
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium truncate">${item.to_email}</span>
-                        <span class="px-2 py-0.5 rounded text-xs ${statusColors[item.status]}">${item.status}</span>
-                    </div>
-                    <div class="text-sm text-slate-500 truncate">${item.subject}</div>
-                    <div class="text-xs text-slate-600">${item.created_at} • Попыток: ${item.attempts}/${item.max_attempts}</div>
+            <div class="p-3 bg-slate-800/30 rounded-lg">
+                <div class="flex items-start justify-between gap-2 mb-1">
+                    <span class="font-medium text-sm truncate min-w-0">${item.to_email}</span>
+                    <span class="px-2 py-0.5 rounded text-xs flex-shrink-0 ${statusColors[item.status]}">${item.status}</span>
                 </div>
-                <button onclick="deleteQueuedEmail(${item.id})" class="p-2 text-red-400 hover:bg-red-500/20 rounded-lg">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
+                <div class="text-xs sm:text-sm text-slate-500 truncate">${item.subject}</div>
+                <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                    <div class="text-xs text-slate-600">${item.created_at} • Попыток: ${item.attempts}/${item.max_attempts}</div>
+                    <button onclick="deleteQueuedEmail(${item.id})" class="p-1.5 text-red-400 hover:bg-red-500/20 rounded-lg flex-shrink-0">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
             </div>
         `;
     });

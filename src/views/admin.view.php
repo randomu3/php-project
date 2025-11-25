@@ -90,6 +90,17 @@
 
         <!-- TAB 1: DATABASE & STATS -->
         <div id="tab-database" class="tab-content animate-fade-in">
+            <!-- Page Header -->
+            <div class="mb-6">
+                <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                        <i data-lucide="database" class="w-5 h-5 text-blue-400"></i>
+                    </div>
+                    База данных
+                </h1>
+                <p class="text-slate-400 text-sm mt-1 ml-13">Управление пользователями и статистика</p>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
                 <div class="glass-panel p-4 sm:p-6 rounded-2xl relative overflow-hidden group">
                     <div class="absolute top-0 right-0 p-2 sm:p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -178,7 +189,7 @@
             // Загружаем данные для вкладки
             if (tab === 'analytics') loadAnalytics();
             if (tab === 'security') { loadActivityLog(); }
-            if (tab === 'settings') { loadTemplates(); loadSystemSettings(); loadBackups(); }
+            if (tab === 'settings') { loadSystemSettings(); loadBackups(); }
             if (tab === 'notifications') { loadAdminNotifications(); loadNotifSettings(); }
             if (tab === 'roles') { loadRoles(); loadUsersForRoles(); }
             if (tab === 'files') { loadFiles(); }

@@ -1,5 +1,16 @@
 <!-- TAB: SESSIONS -->
 <div id="tab-sessions" class="tab-content hidden animate-fade-in">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+                <i data-lucide="users" class="w-5 h-5 text-emerald-400"></i>
+            </div>
+            Управление сессиями
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 ml-13">Мониторинг активных пользователей и управление сессиями</p>
+    </div>
+
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6">
         <div class="glass-panel p-3 sm:p-4 rounded-xl">
             <div class="text-xs sm:text-sm text-slate-400">Активных сессий</div>
@@ -33,12 +44,14 @@
         <!-- Actions -->
         <div class="glass-panel p-4 sm:p-6 rounded-2xl sm:col-span-2 lg:col-span-1">
             <h4 class="text-sm font-medium text-slate-400 mb-4">Действия</h4>
-            <div class="flex sm:flex-col gap-2 sm:gap-3">
-                <button onclick="loadLoginHistory()" class="flex-1 sm:w-full px-3 sm:px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-xs sm:text-sm transition-colors">
-                    <i data-lucide="history" class="w-4 h-4 inline"></i> <span class="hidden sm:inline">История входов</span><span class="sm:hidden">История</span>
+            <div class="flex flex-col gap-3">
+                <button onclick="loadLoginHistory()" class="w-full px-4 py-2.5 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-sm transition-colors flex items-center justify-center gap-2">
+                    <i data-lucide="history" class="w-4 h-4"></i>
+                    <span>История входов</span>
                 </button>
-                <button onclick="terminateAllInactive()" class="flex-1 sm:w-full px-3 sm:px-4 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 rounded-lg text-xs sm:text-sm transition-colors">
-                    <i data-lucide="user-x" class="w-4 h-4 inline"></i> <span class="hidden sm:inline">Завершить неактивные</span><span class="sm:hidden">Завершить</span>
+                <button onclick="terminateAllInactive()" class="w-full px-4 py-2.5 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 rounded-lg text-sm transition-colors flex items-center justify-center gap-2">
+                    <i data-lucide="user-x" class="w-4 h-4"></i>
+                    <span>Завершить неактивные</span>
                 </button>
             </div>
         </div>
@@ -56,7 +69,13 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+        <!-- Mobile cards view -->
+        <div id="sessions-cards" class="sm:hidden space-y-3">
+            <div class="text-center text-slate-400 py-4">Загрузка...</div>
+        </div>
+        
+        <!-- Desktop table view -->
+        <div class="hidden sm:block overflow-x-auto">
             <table class="w-full min-w-[600px]">
                 <thead>
                     <tr class="text-left text-xs sm:text-sm text-slate-400 border-b border-white/10">
@@ -87,7 +106,11 @@
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
-        <div class="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+        <!-- Mobile cards view -->
+        <div id="history-cards" class="sm:hidden space-y-3"></div>
+        
+        <!-- Desktop table view -->
+        <div class="hidden sm:block overflow-x-auto">
             <table class="w-full">
                 <thead>
                     <tr class="text-left text-sm text-slate-400 border-b border-white/10">
@@ -129,13 +152,15 @@ function loadSessions() {
 function renderSessions(sessions) {
     if (sessions.length === 0) {
         $('#sessions-table').html('<tr><td colspan="6" class="py-4 text-center text-slate-400">Нет активных сессий</td></tr>');
+        $('#sessions-cards').html('<div class="text-center text-slate-400 py-4">Нет активных сессий</div>');
         return;
     }
     
-    let html = '';
+    // Desktop table
+    let tableHtml = '';
     sessions.forEach(s => {
         const isCurrent = s.is_current;
-        html += `
+        tableHtml += `
             <tr class="border-b border-white/5 ${isCurrent ? 'bg-emerald-500/10' : ''}">
                 <td class="py-3">
                     <div class="font-medium">${s.username}</div>
@@ -161,8 +186,46 @@ function renderSessions(sessions) {
             </tr>
         `;
     });
+    $('#sessions-table').html(tableHtml);
     
-    $('#sessions-table').html(html);
+    // Mobile cards
+    let cardsHtml = '';
+    sessions.forEach(s => {
+        const isCurrent = s.is_current;
+        cardsHtml += `
+            <div class="p-3 bg-slate-800/30 rounded-lg ${isCurrent ? 'border border-emerald-500/30' : ''}">
+                <div class="flex items-start justify-between gap-2 mb-2">
+                    <div class="min-w-0">
+                        <div class="font-medium text-sm truncate">${s.username}</div>
+                        <div class="text-xs text-slate-500 truncate">${s.email}</div>
+                    </div>
+                    ${isCurrent ? 
+                        '<span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-xs flex-shrink-0">Текущая</span>' : 
+                        `<button onclick="terminateSession('${s.session_id}')" class="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded text-xs transition-colors flex-shrink-0">Завершить</button>`
+                    }
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                        <span class="text-slate-500">IP:</span>
+                        <span class="font-mono">${s.ip_address}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500">Устройство:</span>
+                        <span class="px-1.5 py-0.5 bg-slate-700 rounded">${s.device_type || 'desktop'}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500">Браузер:</span>
+                        <span class="text-slate-400">${s.browser || '-'}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500">Активность:</span>
+                        <span>${s.time_ago}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    $('#sessions-cards').html(cardsHtml);
 }
 
 function renderDevicesChart(devices) {
@@ -245,9 +308,10 @@ function loadLoginHistory() {
 }
 
 function renderLoginHistory(history) {
-    let html = '';
+    // Desktop table
+    let tableHtml = '';
     history.forEach(h => {
-        html += `
+        tableHtml += `
             <tr class="border-b border-white/5">
                 <td class="py-3">${h.username}</td>
                 <td class="py-3 font-mono text-xs">${h.ip_address}</td>
@@ -262,6 +326,28 @@ function renderLoginHistory(history) {
             </tr>
         `;
     });
-    $('#history-table').html(html);
+    $('#history-table').html(tableHtml);
+    
+    // Mobile cards
+    let cardsHtml = '';
+    history.forEach(h => {
+        cardsHtml += `
+            <div class="p-3 bg-slate-800/30 rounded-lg">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-medium text-sm">${h.username}</span>
+                    <span class="px-2 py-0.5 rounded text-xs ${h.is_active ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-700 text-slate-400'}">
+                        ${h.is_active ? 'Активна' : 'Завершена'}
+                    </span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div><span class="text-slate-500">IP:</span> <span class="font-mono">${h.ip_address}</span></div>
+                    <div><span class="text-slate-500">Устройство:</span> ${h.device_type || 'desktop'}</div>
+                    <div><span class="text-slate-500">Локация:</span> ${h.country || '-'}${h.city ? ', ' + h.city : ''}</div>
+                    <div><span class="text-slate-500">Дата:</span> ${h.created_at}</div>
+                </div>
+            </div>
+        `;
+    });
+    $('#history-cards').html(cardsHtml);
 }
 </script>

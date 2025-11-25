@@ -1,5 +1,16 @@
 <!-- TAB: API KEYS -->
 <div id="tab-api" class="tab-content hidden animate-fade-in">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+            <div class="w-10 h-10 bg-cyan-500/20 rounded-xl flex items-center justify-center">
+                <i data-lucide="key" class="w-5 h-5 text-cyan-400"></i>
+            </div>
+            API ключи
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 ml-13">Управление ключами доступа к API</p>
+    </div>
+
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6">
         <div class="glass-panel p-3 sm:p-4 rounded-xl">
             <div class="text-xs sm:text-sm text-slate-400">Активных ключей</div>

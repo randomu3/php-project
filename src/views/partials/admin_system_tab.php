@@ -1,5 +1,16 @@
 <!-- TAB: SYSTEM MONITORING -->
 <div id="tab-system" class="tab-content hidden animate-fade-in">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-500/20 rounded-xl flex items-center justify-center">
+                <i data-lucide="server" class="w-5 h-5 text-indigo-400"></i>
+            </div>
+            Мониторинг системы
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 ml-13">Состояние сервера, ресурсы и производительность</p>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         <div class="glass-panel p-4 rounded-xl">
             <div class="flex items-center gap-3 mb-2">

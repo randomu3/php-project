@@ -1,22 +1,33 @@
 <!-- TAB: CMS -->
 <div id="tab-cms" class="tab-content hidden animate-fade-in">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                <i data-lucide="file-text" class="w-5 h-5 text-blue-400"></i>
+            </div>
+            Управление контентом
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 ml-13">Страницы сайта и навигационные меню</p>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Pages List -->
-        <div class="lg:col-span-2 glass-panel p-6 rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold flex items-center gap-2">
+        <div class="lg:col-span-2 glass-panel p-4 sm:p-6 rounded-2xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                <h3 class="text-base sm:text-lg font-semibold flex items-center gap-2">
                     <i data-lucide="file-text" class="w-5 h-5 text-blue-400"></i>
                     Страницы
                 </h3>
                 <div class="flex gap-2">
-                    <select id="page-status-filter" class="bg-slate-800/50 border border-white/10 rounded-lg px-3 py-1.5 text-sm">
+                    <select id="page-status-filter" class="flex-1 sm:flex-none bg-slate-800/50 border border-white/10 rounded-lg px-2 sm:px-3 py-1.5 text-xs sm:text-sm">
                         <option value="">Все статусы</option>
                         <option value="published">Опубликованные</option>
                         <option value="draft">Черновики</option>
                         <option value="archived">Архив</option>
                     </select>
-                    <button onclick="showPageEditor()" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-sm transition-colors">
-                        <i data-lucide="plus" class="w-4 h-4 inline"></i> Создать
+                    <button onclick="showPageEditor()" class="px-2 sm:px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-xs sm:text-sm transition-colors whitespace-nowrap">
+                        <i data-lucide="plus" class="w-4 h-4 inline"></i> <span class="hidden sm:inline">Создать</span>
                     </button>
                 </div>
             </div>
@@ -26,13 +37,13 @@
         </div>
 
         <!-- Menus -->
-        <div class="glass-panel p-6 rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold flex items-center gap-2">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl">
+            <div class="flex items-center justify-between mb-4 sm:mb-6">
+                <h3 class="text-base sm:text-lg font-semibold flex items-center gap-2">
                     <i data-lucide="menu" class="w-5 h-5 text-purple-400"></i>
                     Меню
                 </h3>
-                <button onclick="showCreateMenuModal()" class="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-sm transition-colors">
+                <button onclick="showCreateMenuModal()" class="px-2 sm:px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-xs sm:text-sm transition-colors">
                     <i data-lucide="plus" class="w-4 h-4 inline"></i>
                 </button>
             </div>
@@ -43,9 +54,9 @@
     </div>
 
     <!-- Page Editor -->
-    <div id="page-editor" class="glass-panel p-6 rounded-2xl mt-6 hidden">
-        <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-semibold" id="editor-title">Новая страница</h3>
+    <div id="page-editor" class="glass-panel p-4 sm:p-6 rounded-2xl mt-4 sm:mt-6 hidden">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <h3 class="text-base sm:text-lg font-semibold" id="editor-title">Новая страница</h3>
             <button onclick="$('#page-editor').addClass('hidden')" class="text-slate-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -95,12 +106,12 @@
     </div>
 
     <!-- Menu Items Editor -->
-    <div id="menu-items-editor" class="glass-panel p-6 rounded-2xl mt-6 hidden">
-        <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-semibold" id="menu-editor-title">Пункты меню</h3>
-            <div class="flex gap-2">
-                <button onclick="showAddMenuItemModal()" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-sm transition-colors">
-                    <i data-lucide="plus" class="w-4 h-4 inline"></i> Добавить
+    <div id="menu-items-editor" class="glass-panel p-4 sm:p-6 rounded-2xl mt-4 sm:mt-6 hidden">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <h3 class="text-base sm:text-lg font-semibold truncate" id="menu-editor-title">Пункты меню</h3>
+            <div class="flex gap-2 flex-shrink-0">
+                <button onclick="showAddMenuItemModal()" class="px-2 sm:px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-xs sm:text-sm transition-colors">
+                    <i data-lucide="plus" class="w-4 h-4 inline"></i> <span class="hidden sm:inline">Добавить</span>
                 </button>
                 <button onclick="$('#menu-items-editor').addClass('hidden')" class="text-slate-400 hover:text-white">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -189,15 +200,15 @@ function renderPages(pages) {
         };
         
         html += `
-            <div class="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium">${p.title}</span>
-                        <span class="px-2 py-0.5 rounded text-xs ${statusColors[p.status]}">${p.status}</span>
+            <div class="p-3 sm:p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
+                <div class="flex items-start sm:items-center justify-between gap-3">
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium text-sm sm:text-base truncate">${p.title}</div>
+                        <div class="text-xs sm:text-sm text-slate-500 truncate">/${p.slug} • ${p.views_count} просмотров</div>
                     </div>
-                    <div class="text-sm text-slate-500">/${p.slug} • ${p.views_count} просмотров</div>
+                    <span class="px-2 py-0.5 rounded text-xs whitespace-nowrap flex-shrink-0 ${statusColors[p.status]}">${p.status}</span>
                 </div>
-                <div class="flex gap-2">
+                <div class="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-white/5">
                     <a href="/${p.slug}" target="_blank" class="p-2 text-blue-400 hover:bg-blue-500/20 rounded-lg"><i data-lucide="external-link" class="w-4 h-4"></i></a>
                     <button onclick="editPage(${p.id})" class="p-2 text-slate-400 hover:bg-slate-700 rounded-lg"><i data-lucide="edit" class="w-4 h-4"></i></button>
                     <button onclick="deletePage(${p.id})" class="p-2 text-red-400 hover:bg-red-500/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
