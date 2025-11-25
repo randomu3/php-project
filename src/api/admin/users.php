@@ -3,7 +3,7 @@
 /**
  * Admin Users API
  *
- * Handles user management actions: block, unblock, toggle admin, reset password, verify email.
+ * Handles user management actions: list, block, unblock, toggle admin, reset password, verify email.
  *
  * @package AuraUI\API\Admin
  */
@@ -19,14 +19,25 @@ if (!isLoggedIn() || !isAdmin()) {
     exit;
 }
 
-// Проверка CSRF
-if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
+$db = getDB();
+$db->exec("SET NAMES utf8mb4");
+
+// GET запросы не требуют CSRF
+$action = $_GET['action'] ?? $_POST['action'] ?? '';
+
+// Для GET запросов (list) не проверяем CSRF
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'list') {
+    listUsers($db);
+    exit;
+}
+
+// Проверка CSRF для POST запросов
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verifyCSRFToken($_POST['csrf_token'] ?? '')) {
     http_response_code(403);
     echo json_encode(['success' => false, 'error' => 'Ошибка безопасности']);
     exit;
 }
 
-$action = $_POST['action'] ?? '';
 $userId = (int)($_POST['user_id'] ?? 0);
 
 if (!$userId) {
@@ -141,4 +152,27 @@ try {
 } catch (PDOException $e) {
     error_log("Admin users API error: " . $e->getMessage());
     echo json_encode(['success' => false, 'error' => 'Ошибка базы данных']);
+}
+
+/**
+ * List all users
+ *
+ * @param PDO $db Database connection
+ *
+ * @return void
+ */
+function listUsers($db): void
+{
+    try {
+        $stmt = $db->query("
+            SELECT id, username, email, is_admin, email_verified, created_at, last_login, 
+                   failed_attempts, locked_until
+            FROM users 
+            ORDER BY id DESC
+        ");
+        $users = $stmt->fetchAll();
+        echo json_encode(['success' => true, 'users' => $users]);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'error' => 'Database error']);
+    }
 }

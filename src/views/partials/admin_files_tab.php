@@ -95,13 +95,13 @@
 </div>
 
 <script>
-let currentFolder = 'uploads';
+let currentFolder = '';
 
-function loadFiles(folder = 'uploads') {
+function loadFiles(folder = '') {
     currentFolder = folder;
-    $('#current-folder').text('/' + folder);
+    $('#current-folder').text('/uploads' + (folder ? '/' + folder : ''));
     
-    $.get('/api/admin/files.php?action=list&folder=' + folder, function(response) {
+    $.get('/api/admin/files.php?action=list&folder=' + encodeURIComponent(folder), function(response) {
         if (response.success) {
             renderFiles(response.files);
             updateBreadcrumb(folder);
@@ -125,9 +125,10 @@ function renderFiles(files) {
     
     let html = '';
     files.forEach(file => {
+        const newFolder = currentFolder ? currentFolder + '/' + file.name : file.name;
         if (file.is_dir) {
             html += `
-                <div class="group bg-slate-800/30 rounded-xl p-4 hover:bg-slate-800/50 transition-colors cursor-pointer" ondblclick="navigateToFolder('${currentFolder}/${file.name}')">
+                <div class="group bg-slate-800/30 rounded-xl p-4 hover:bg-slate-800/50 transition-colors cursor-pointer" ondblclick="navigateToFolder('${newFolder}')">
                     <div class="flex flex-col items-center">
                         <i data-lucide="folder" class="w-12 h-12 text-yellow-400 mb-2"></i>
                         <div class="text-sm text-center truncate w-full">${file.name}</div>
@@ -183,18 +184,21 @@ function getFileIcon(mime) {
 }
 
 function updateBreadcrumb(folder) {
-    const parts = folder.split('/');
-    let html = '';
-    let path = '';
+    let html = '<button onclick="navigateToFolder(\'\')" class="text-blue-400 hover:text-blue-300">uploads</button>';
     
-    parts.forEach((part, i) => {
-        path += (i > 0 ? '/' : '') + part;
-        const currentPath = path;
-        html += `
-            <button onclick="navigateToFolder('${currentPath}')" class="text-blue-400 hover:text-blue-300">${part}</button>
-            ${i < parts.length - 1 ? '<span class="text-slate-500">/</span>' : ''}
-        `;
-    });
+    if (folder) {
+        const parts = folder.split('/').filter(p => p);
+        let path = '';
+        
+        parts.forEach((part, i) => {
+            path += (path ? '/' : '') + part;
+            const currentPath = path;
+            html += `
+                <span class="text-slate-500">/</span>
+                <button onclick="navigateToFolder('${currentPath}')" class="text-blue-400 hover:text-blue-300">${part}</button>
+            `;
+        });
+    }
     
     $('#breadcrumb').html(html);
 }
@@ -313,17 +317,26 @@ function formatBytes(bytes) {
 }
 
 // Load folders
-$.get('/api/admin/files.php?action=get_folders', function(response) {
-    if (response.success) {
-        let options = '';
-        response.folders.forEach(f => {
-            options += `<option value="${f}">${f}</option>`;
-        });
-        $('#folder-select').html(options);
-    }
-});
+function loadFolderSelect() {
+    $.get('/api/admin/files.php?action=get_folders', function(response) {
+        if (response.success) {
+            let options = '<option value="">/ (корень)</option>';
+            response.folders.forEach(f => {
+                if (f) {
+                    options += `<option value="${f}">/${f}</option>`;
+                }
+            });
+            $('#folder-select').html(options);
+        }
+    });
+}
 
 $('#folder-select').on('change', function() {
     loadFiles($(this).val());
+});
+
+// Init when tab is shown
+$(document).ready(function() {
+    loadFolderSelect();
 });
 </script>

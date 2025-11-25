@@ -51,10 +51,17 @@ switch ($action) {
  */
 function listFiles($db): void
 {
-    $folder = $_GET['folder'] ?? 'uploads';
+    $folder = $_GET['folder'] ?? '';
     $folder = preg_replace('/[^a-zA-Z0-9_\-\/]/', '', $folder);
     
-    $basePath = __DIR__ . '/../../uploads/' . $folder;
+    // Base uploads directory
+    $uploadsBase = __DIR__ . '/../../uploads';
+    $basePath = $folder ? $uploadsBase . '/' . $folder : $uploadsBase;
+    
+    // Create uploads directory if not exists
+    if (!is_dir($uploadsBase)) {
+        mkdir($uploadsBase, 0755, true);
+    }
     $files = [];
     
     if (is_dir($basePath)) {
@@ -65,9 +72,10 @@ function listFiles($db): void
             $fullPath = $basePath . '/' . $item;
             $isDir = is_dir($fullPath);
             
+            $relativePath = $folder ? '/uploads/' . $folder . '/' . $item : '/uploads/' . $item;
             $files[] = [
                 'name' => $item,
-                'path' => '/uploads/' . $folder . '/' . $item,
+                'path' => $relativePath,
                 'is_dir' => $isDir,
                 'size' => $isDir ? 0 : filesize($fullPath),
                 'size_formatted' => $isDir ? '-' : formatBytes(filesize($fullPath)),
@@ -219,7 +227,12 @@ function renameFile($db): void
 function getFolders(): void
 {
     $basePath = __DIR__ . '/../../uploads';
-    $folders = ['uploads'];
+    $folders = [''];  // Root uploads folder
+    
+    // Create uploads directory if not exists
+    if (!is_dir($basePath)) {
+        mkdir($basePath, 0755, true);
+    }
     
     if (is_dir($basePath)) {
         $iterator = new RecursiveIteratorIterator(
@@ -229,7 +242,9 @@ function getFolders(): void
         
         foreach ($iterator as $item) {
             if ($item->isDir()) {
-                $folders[] = 'uploads/' . str_replace($basePath . '/', '', $item->getPathname());
+                $relativePath = str_replace([$basePath . '/', $basePath . '\\'], '', $item->getPathname());
+                $relativePath = str_replace('\\', '/', $relativePath);
+                $folders[] = $relativePath;
             }
         }
     }
@@ -242,7 +257,7 @@ function getFolders(): void
  */
 function createFolder(): void
 {
-    $parent = $_POST['parent'] ?? 'uploads';
+    $parent = $_POST['parent'] ?? '';
     $name = $_POST['name'] ?? '';
     
     $name = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $name);
@@ -251,7 +266,8 @@ function createFolder(): void
         return;
     }
     
-    $path = __DIR__ . '/../../uploads/' . $parent . '/' . $name;
+    $basePath = __DIR__ . '/../../uploads';
+    $path = $parent ? $basePath . '/' . $parent . '/' . $name : $basePath . '/' . $name;
     
     if (!is_dir($path)) {
         mkdir($path, 0755, true);
