@@ -1,7 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../helpers/CacheHelper.php';
+
+use AuraUI\Helpers\CacheHelper;
 
 header('Content-Type: application/json');
 

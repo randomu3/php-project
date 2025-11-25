@@ -1,7 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../helpers/NotificationManager.php';
+
+use AuraUI\Helpers\NotificationManager;
 
 header('Content-Type: application/json');
 

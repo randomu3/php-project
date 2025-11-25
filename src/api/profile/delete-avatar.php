@@ -1,8 +1,11 @@
 <?php
 
 require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../helpers/ImageUploader.php';
-require_once __DIR__ . '/../../helpers/ActivityLogger.php';
+
+use AuraUI\Helpers\ActivityActions;
+use AuraUI\Helpers\ImageUploader;
+
+use function logActivity;
 
 header('Content-Type: application/json');
 
