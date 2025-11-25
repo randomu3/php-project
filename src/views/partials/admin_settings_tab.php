@@ -293,14 +293,17 @@ function renderTemplatesList(templates) {
     });
     container.html(html);
     lucide.createIcons();
-    
-    // Привязываем события через делегирование (один раз)
-    container.off('click', '.template-info, .btn-preview, .btn-edit');
+}
+
+// Привязываем события через делегирование один раз при загрузке
+$(document).ready(function() {
+    const container = $('#templates-list');
     
     container.on('click', '.template-info', function(e) {
         e.preventDefault();
         e.stopPropagation();
         const id = $(this).data('template-id');
+        console.log('Click on template-info, id:', id);
         if (id) loadTemplate(id);
     });
     
@@ -308,6 +311,7 @@ function renderTemplatesList(templates) {
         e.preventDefault();
         e.stopPropagation();
         const id = $(this).data('template-id');
+        console.log('Click on btn-preview, id:', id);
         if (id) quickPreview(id);
     });
     
@@ -315,9 +319,10 @@ function renderTemplatesList(templates) {
         e.preventDefault();
         e.stopPropagation();
         const id = $(this).data('template-id');
+        console.log('Click on btn-edit, id:', id);
         if (id) loadTemplate(id);
     });
-}
+});
 
 function quickPreview(id) {
     $.get('/api/admin/settings.php?action=get_template&id=' + id, function(response) {
