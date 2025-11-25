@@ -23,6 +23,7 @@ $action = $_REQUEST['action'] ?? '';
 
 try {
     $db = getDB();
+    $db->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
     
     switch ($action) {
         // Получить список заблокированных IP

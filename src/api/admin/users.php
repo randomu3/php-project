@@ -39,6 +39,7 @@ $currentUserId = $_SESSION['user_id'];
 
 try {
     $db = getDB();
+    $db->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
     
     // Проверяем существование пользователя
     $stmt = $db->prepare("SELECT id, username, email, is_admin, locked_until, email_verified FROM users WHERE id = ?");

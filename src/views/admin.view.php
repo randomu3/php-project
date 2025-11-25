@@ -43,6 +43,9 @@
             <button onclick="switchTab('database')" id="btn-database" class="tab-btn active flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="database" class="w-4 h-4"></i> База данных
             </button>
+            <button onclick="switchTab('analytics')" id="btn-analytics" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Аналитика
+            </button>
             <button onclick="switchTab('security')" id="btn-security" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="shield" class="w-4 h-4"></i> Безопасность
             </button>
@@ -81,7 +84,10 @@
             <?php require __DIR__ . '/partials/tokens_table.php'; ?>
         </div>
 
-        <!-- TAB 2: SECURITY -->
+        <!-- TAB 2: ANALYTICS -->
+        <?php require __DIR__ . '/partials/admin_analytics_tab.php'; ?>
+
+        <!-- TAB 3: SECURITY -->
         <?php require __DIR__ . '/partials/admin_security_tab.php'; ?>
 
         <!-- TAB 3: EMAIL SENDER -->
@@ -93,6 +99,22 @@
     <script src="/assets/js/app.js"></script>
     <script>
         lucide.createIcons();
+        
+        // Переключение вкладок
+        function switchTab(tab) {
+            // Скрываем все вкладки
+            $('.tab-content').addClass('hidden');
+            // Показываем нужную
+            $('#tab-' + tab).removeClass('hidden');
+            // Убираем активный класс со всех кнопок
+            $('.tab-btn').removeClass('active bg-purple-500/20 border-purple-500/50 text-purple-300');
+            // Добавляем активный класс нужной кнопке
+            $('#btn-' + tab).addClass('active bg-purple-500/20 border-purple-500/50 text-purple-300');
+            
+            // Загружаем данные для вкладки
+            if (tab === 'analytics') loadAnalytics();
+            if (tab === 'security') { loadActivityLog(); }
+        }
 
         // Очистка URL от GET параметров после показа уведомления
         if (window.location.search.includes('email_sent') || 
