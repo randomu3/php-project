@@ -128,7 +128,7 @@ function renderFiles(files) {
         const newFolder = currentFolder ? currentFolder + '/' + file.name : file.name;
         if (file.is_dir) {
             html += `
-                <div class="group bg-slate-800/30 rounded-xl p-4 hover:bg-slate-800/50 transition-colors cursor-pointer" ondblclick="navigateToFolder('${newFolder}')">
+                <div class="group bg-slate-800/30 rounded-xl p-4 hover:bg-slate-800/50 transition-colors cursor-pointer" onclick="navigateToFolder('${newFolder}')">
                     <div class="flex flex-col items-center">
                         <i data-lucide="folder" class="w-12 h-12 text-yellow-400 mb-2"></i>
                         <div class="text-sm text-center truncate w-full">${file.name}</div>

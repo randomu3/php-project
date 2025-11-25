@@ -19,7 +19,7 @@ if (!isLoggedIn() || !isAdmin()) {
 
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
 $db = getDB();
-$db->exec("SET NAMES utf8mb4");
+$db->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
 
 switch ($action) {
     case 'get_roles':

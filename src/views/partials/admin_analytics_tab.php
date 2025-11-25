@@ -118,27 +118,34 @@ function loadRegistrationsChart() {
     const endpoint = period === 'weekly' ? 'registrations_weekly' : 'registrations_chart';
     
     $.get('/api/admin/analytics.php?action=' + endpoint, function(r) {
-        if (r.success && r.data.length) {
-            const max = Math.max(...r.data.map(d => d.count));
+        if (r.success && r.data && r.data.length > 0) {
+            const max = Math.max(...r.data.map(d => parseInt(d.count) || 0));
             let html = '';
             
             r.data.forEach(function(d) {
-                const height = max > 0 ? (d.count / max * 100) : 0;
-                const label = period === 'weekly' ? 
-                    new Date(d.week_start).toLocaleDateString('ru-RU', {day: 'numeric', month: 'short'}) :
-                    new Date(d.date).getDate();
+                const count = parseInt(d.count) || 0;
+                const height = max > 0 ? (count / max * 100) : 5;
+                let label = '';
+                
+                if (period === 'weekly' && d.week_start) {
+                    label = new Date(d.week_start).toLocaleDateString('ru-RU', {day: 'numeric', month: 'short'});
+                } else if (d.date) {
+                    label = new Date(d.date).getDate();
+                }
                     
-                html += `<div class="flex-1 flex flex-col items-center gap-1">
-                    <div class="w-full bg-gradient-to-t from-blue-500 to-purple-500 rounded-t transition-all" style="height: ${Math.max(height, 2)}%"></div>
-                    <span class="text-xs text-slate-500">${label}</span>
-                    <span class="text-xs text-slate-400">${d.count}</span>
+                html += `<div class="flex-1 min-w-[20px] flex flex-col items-center gap-1">
+                    <div class="w-full min-h-[4px] bg-gradient-to-t from-blue-500 to-purple-500 rounded-t transition-all" style="height: ${Math.max(height, 5)}%"></div>
+                    <span class="text-[10px] text-slate-500">${label}</span>
+                    <span class="text-[10px] text-slate-400">${count}</span>
                 </div>`;
             });
             
             $('#registrations-chart').html(html);
         } else {
-            $('#registrations-chart').html('<div class="w-full text-center text-slate-500">Нет данных</div>');
+            $('#registrations-chart').html('<div class="w-full h-full flex items-center justify-center text-slate-500">Нет данных за период</div>');
         }
+    }).fail(function() {
+        $('#registrations-chart').html('<div class="w-full h-full flex items-center justify-center text-red-400">Ошибка загрузки</div>');
     });
 }
 

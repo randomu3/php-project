@@ -47,8 +47,10 @@ switch ($action) {
 function listSessions($db): void
 {
     $stmt = $db->query("
-        SELECT s.*, u.username, u.email
-        FROM user_sessions_extended s
+        SELECT s.*, u.username, u.email,
+               SUBSTRING_INDEX(s.device_info, ' - ', 1) as device_type,
+               SUBSTRING_INDEX(s.device_info, ' - ', -1) as browser
+        FROM user_sessions s
         JOIN users u ON s.user_id = u.id
         WHERE s.is_active = 1
         ORDER BY s.last_activity DESC
@@ -83,7 +85,7 @@ function terminateSession($db): void
         return;
     }
     
-    $stmt = $db->prepare("UPDATE user_sessions_extended SET is_active = 0 WHERE session_id = ?");
+    $stmt = $db->prepare("UPDATE user_sessions SET is_active = 0 WHERE session_id = ?");
     $stmt->execute([$sessionId]);
     
     // Also destroy the PHP session file if possible
@@ -113,7 +115,7 @@ function terminateUserSessions($db): void
         return;
     }
     
-    $stmt = $db->prepare("UPDATE user_sessions_extended SET is_active = 0 WHERE user_id = ?");
+    $stmt = $db->prepare("UPDATE user_sessions SET is_active = 0 WHERE user_id = ?");
     $stmt->execute([$userId]);
     
     echo json_encode(['success' => true]);
@@ -128,8 +130,9 @@ function getLoginHistory($db): void
     $limit = min((int)($_GET['limit'] ?? 50), 100);
     
     $sql = "
-        SELECT s.*, u.username
-        FROM user_sessions_extended s
+        SELECT s.*, u.username,
+               SUBSTRING_INDEX(s.device_info, ' - ', 1) as device_type
+        FROM user_sessions s
         JOIN users u ON s.user_id = u.id
     ";
     
@@ -155,26 +158,26 @@ function getSessionStats($db): void
 {
     $stats = $db->query("
         SELECT 
-            (SELECT COUNT(*) FROM user_sessions_extended WHERE is_active = 1) as active_sessions,
-            (SELECT COUNT(DISTINCT user_id) FROM user_sessions_extended WHERE is_active = 1) as active_users,
-            (SELECT COUNT(*) FROM user_sessions_extended WHERE created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR)) as sessions_24h,
-            (SELECT COUNT(*) FROM user_sessions_extended WHERE created_at > DATE_SUB(NOW(), INTERVAL 7 DAY)) as sessions_7d
+            (SELECT COUNT(*) FROM user_sessions WHERE is_active = 1) as active_sessions,
+            (SELECT COUNT(DISTINCT user_id) FROM user_sessions WHERE is_active = 1) as active_users,
+            (SELECT COUNT(*) FROM user_sessions WHERE created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR)) as sessions_24h,
+            (SELECT COUNT(*) FROM user_sessions WHERE created_at > DATE_SUB(NOW(), INTERVAL 7 DAY)) as sessions_7d
     ")->fetch();
     
     // Device breakdown
     $devices = $db->query("
-        SELECT device_type, COUNT(*) as count
-        FROM user_sessions_extended
-        WHERE is_active = 1
-        GROUP BY device_type
+        SELECT SUBSTRING_INDEX(device_info, ' - ', 1) as device_type, COUNT(*) as count
+        FROM user_sessions
+        WHERE is_active = 1 AND device_info IS NOT NULL
+        GROUP BY SUBSTRING_INDEX(device_info, ' - ', 1)
     ")->fetchAll();
     
     // Browser breakdown
     $browsers = $db->query("
-        SELECT browser, COUNT(*) as count
-        FROM user_sessions_extended
-        WHERE is_active = 1 AND browser IS NOT NULL
-        GROUP BY browser
+        SELECT SUBSTRING_INDEX(device_info, ' - ', -1) as browser, COUNT(*) as count
+        FROM user_sessions
+        WHERE is_active = 1 AND device_info IS NOT NULL
+        GROUP BY SUBSTRING_INDEX(device_info, ' - ', -1)
         ORDER BY count DESC
         LIMIT 5
     ")->fetchAll();
