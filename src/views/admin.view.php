@@ -43,6 +43,9 @@
             <button onclick="switchTab('database')" id="btn-database" class="tab-btn active flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="database" class="w-4 h-4"></i> База данных
             </button>
+            <button onclick="switchTab('security')" id="btn-security" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="shield" class="w-4 h-4"></i> Безопасность
+            </button>
             <button onclick="switchTab('email')" id="btn-email" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="send" class="w-4 h-4"></i> Рассылка
             </button>
@@ -78,7 +81,10 @@
             <?php require __DIR__ . '/partials/tokens_table.php'; ?>
         </div>
 
-        <!-- TAB 2: EMAIL SENDER -->
+        <!-- TAB 2: SECURITY -->
+        <?php require __DIR__ . '/partials/admin_security_tab.php'; ?>
+
+        <!-- TAB 3: EMAIL SENDER -->
         <div id="tab-email" class="tab-content hidden animate-fade-in">
             <?php require __DIR__ . '/partials/email_sender.php'; ?>
         </div>

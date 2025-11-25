@@ -50,9 +50,17 @@ class LoginController
         $error = '';
         $username = sanitizeInput($_POST['username'] ?? '');
         $password = $_POST['password'] ?? '';
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
         if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
+            $this->logLoginAttempt($ip, $username, $userAgent, false, 'CSRF error');
             return ['error' => 'Ошибка безопасности (CSRF)', 'username' => $username];
+        }
+
+        // Проверяем, не заблокирован ли IP
+        if ($this->isIPBlocked($ip)) {
+            return ['error' => 'Ваш IP заблокирован. Обратитесь к администратору.', 'username' => $username];
         }
 
         if (empty($username) || empty($password)) {
@@ -67,11 +75,13 @@ class LoginController
 
             if ($user) {
                 if ($user['locked_until'] && strtotime($user['locked_until']) > time()) {
+                    $this->logLoginAttempt($ip, $username, $userAgent, false, 'Account locked');
                     return ['error' => 'Аккаунт временно заблокирован. Попробуйте позже.', 'username' => $username];
                 }
 
                 // Проверяем подтверждение email
                 if (!$user['email_verified']) {
+                    $this->logLoginAttempt($ip, $username, $userAgent, false, 'Email not verified');
                     return ['error' => 'Email не подтверждён. Проверьте почту и перейдите по ссылке подтверждения.', 'username' => $username];
                 }
 
@@ -83,7 +93,11 @@ class LoginController
                     $stmt->execute([$user['id']]);
 
                     // Логируем успешный вход
+                    $this->logLoginAttempt($ip, $username, $userAgent, true, null);
                     logActivity(ActivityActions::USER_LOGIN, sprintf('Пользователь %s вошел в систему', $user['username']), 'user', $user['id']);
+                    
+                    // Сохраняем сессию в БД
+                    $this->saveSession($user['id'], $ip, $userAgent);
 
                     session_regenerate_id(true);
                     header('Location: /');
@@ -101,7 +115,10 @@ class LoginController
 
                 $stmt = $db->prepare("UPDATE users SET failed_attempts = ?, locked_until = ? WHERE id = ?");
                 $stmt->execute([$failed_attempts, $locked_until, $user['id']]);
+                
+                $this->logLoginAttempt($ip, $username, $userAgent, false, 'Wrong password');
             } else {
+                $this->logLoginAttempt($ip, $username, $userAgent, false, 'User not found');
                 $error = 'Неверное имя пользователя или пароль';
             }
         } catch (PDOException) {
@@ -109,5 +126,102 @@ class LoginController
         }
 
         return ['error' => $error, 'username' => $username];
+    }
+
+    /**
+     * Log login attempt to database
+     *
+     * @param string $ip IP address
+     * @param string $username Username attempted
+     * @param string $userAgent User agent string
+     * @param bool $success Whether login was successful
+     * @param string|null $reason Failure reason
+     *
+     * @return void
+     */
+    private function logLoginAttempt(string $ip, string $username, string $userAgent, bool $success, ?string $reason): void
+    {
+        try {
+            $db = getDB();
+            $stmt = $db->prepare("INSERT INTO login_attempts (ip_address, username, user_agent, success, failure_reason) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$ip, $username, $userAgent, $success ? 1 : 0, $reason]);
+        } catch (PDOException $e) {
+            error_log("Failed to log login attempt: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Check if IP is blocked
+     *
+     * @param string $ip IP address to check
+     *
+     * @return bool True if blocked
+     */
+    private function isIPBlocked(string $ip): bool
+    {
+        try {
+            $db = getDB();
+            $stmt = $db->prepare("SELECT id FROM blocked_ips WHERE ip_address = ? AND (is_permanent = 1 OR expires_at > NOW())");
+            $stmt->execute([$ip]);
+            return (bool)$stmt->fetch();
+        } catch (PDOException) {
+            return false;
+        }
+    }
+
+    /**
+     * Save user session to database
+     *
+     * @param int $userId User ID
+     * @param string $ip IP address
+     * @param string $userAgent User agent string
+     *
+     * @return void
+     */
+    private function saveSession(int $userId, string $ip, string $userAgent): void
+    {
+        try {
+            $db = getDB();
+            $sessionId = session_id();
+            $deviceInfo = $this->parseUserAgent($userAgent);
+            
+            // Удаляем старую сессию с таким же ID если есть
+            $stmt = $db->prepare("DELETE FROM user_sessions WHERE session_id = ?");
+            $stmt->execute([$sessionId]);
+            
+            // Создаём новую запись
+            $stmt = $db->prepare("INSERT INTO user_sessions (user_id, session_id, ip_address, user_agent, device_info) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$userId, $sessionId, $ip, $userAgent, $deviceInfo]);
+        } catch (PDOException $e) {
+            error_log("Failed to save session: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Parse user agent to get device info
+     *
+     * @param string $userAgent User agent string
+     *
+     * @return string Device info
+     */
+    private function parseUserAgent(string $userAgent): string
+    {
+        $device = 'Unknown';
+        
+        if (preg_match('/Windows/i', $userAgent)) $device = 'Windows';
+        elseif (preg_match('/Macintosh|Mac OS/i', $userAgent)) $device = 'Mac';
+        elseif (preg_match('/Linux/i', $userAgent)) $device = 'Linux';
+        elseif (preg_match('/iPhone/i', $userAgent)) $device = 'iPhone';
+        elseif (preg_match('/iPad/i', $userAgent)) $device = 'iPad';
+        elseif (preg_match('/Android/i', $userAgent)) $device = 'Android';
+        
+        $browser = 'Unknown';
+        if (preg_match('/Chrome/i', $userAgent)) $browser = 'Chrome';
+        elseif (preg_match('/Firefox/i', $userAgent)) $browser = 'Firefox';
+        elseif (preg_match('/Safari/i', $userAgent)) $browser = 'Safari';
+        elseif (preg_match('/Edge/i', $userAgent)) $browser = 'Edge';
+        elseif (preg_match('/Opera|OPR/i', $userAgent)) $browser = 'Opera';
+        
+        return "{$device} / {$browser}";
     }
 }
