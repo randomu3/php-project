@@ -28,6 +28,8 @@ require_once __DIR__ . '/helpers/NotificationManager.php';
 require_once __DIR__ . '/helpers/ImageUploader.php';
 require_once __DIR__ . '/helpers/EmailValidator.php';
 require_once __DIR__ . '/helpers/AdminNotifier.php';
+require_once __DIR__ . '/helpers/SessionTracker.php';
+require_once __DIR__ . '/helpers/SystemLogger.php';
 
 // Подключаем контроллеры
 require_once __DIR__ . '/controllers/LoginController.php';

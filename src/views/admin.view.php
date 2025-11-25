@@ -39,25 +39,50 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
+        <!-- Navigation Tabs -->
         <div class="flex flex-wrap gap-2 mb-8">
-            <button onclick="switchTab('database')" id="btn-database" class="tab-btn active flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="database" class="w-4 h-4"></i> База данных
+            <button onclick="switchTab('database')" id="btn-database" class="tab-btn active flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="database" class="w-4 h-4"></i> <span class="hidden sm:inline">База данных</span>
             </button>
-            <button onclick="switchTab('analytics')" id="btn-analytics" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Аналитика
+            <button onclick="switchTab('analytics')" id="btn-analytics" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i> <span class="hidden sm:inline">Аналитика</span>
             </button>
-            <button onclick="switchTab('security')" id="btn-security" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="shield" class="w-4 h-4"></i> Безопасность
+            <button onclick="switchTab('roles')" id="btn-roles" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> <span class="hidden sm:inline">Роли</span>
             </button>
-            <button onclick="switchTab('settings')" id="btn-settings" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="settings" class="w-4 h-4"></i> Настройки
+            <button onclick="switchTab('sessions')" id="btn-sessions" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="users" class="w-4 h-4"></i> <span class="hidden sm:inline">Сессии</span>
             </button>
-            <button onclick="switchTab('notifications')" id="btn-notifications" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="bell" class="w-4 h-4"></i> Уведомления
+            <button onclick="switchTab('files')" id="btn-files" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="folder" class="w-4 h-4"></i> <span class="hidden sm:inline">Файлы</span>
+            </button>
+            <button onclick="switchTab('cms')" id="btn-cms" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="file-text" class="w-4 h-4"></i> <span class="hidden sm:inline">CMS</span>
+            </button>
+            <button onclick="switchTab('cron')" id="btn-cron" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="clock" class="w-4 h-4"></i> <span class="hidden sm:inline">Задачи</span>
+            </button>
+            <button onclick="switchTab('api')" id="btn-api" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="key" class="w-4 h-4"></i> <span class="hidden sm:inline">API</span>
+            </button>
+            <button onclick="switchTab('logs')" id="btn-logs" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="scroll-text" class="w-4 h-4"></i> <span class="hidden sm:inline">Логи</span>
+            </button>
+            <button onclick="switchTab('system')" id="btn-system" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="server" class="w-4 h-4"></i> <span class="hidden sm:inline">Система</span>
+            </button>
+            <button onclick="switchTab('security')" id="btn-security" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="shield" class="w-4 h-4"></i> <span class="hidden sm:inline">Безопасность</span>
+            </button>
+            <button onclick="switchTab('settings')" id="btn-settings" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="settings" class="w-4 h-4"></i> <span class="hidden sm:inline">Настройки</span>
+            </button>
+            <button onclick="switchTab('notifications')" id="btn-notifications" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden sm:inline">Уведомления</span>
                 <span id="admin-notif-badge" class="px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full hidden">0</span>
             </button>
-            <button onclick="switchTab('email')" id="btn-email" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="send" class="w-4 h-4"></i> Рассылка
+            <button onclick="switchTab('email')" id="btn-email" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="send" class="w-4 h-4"></i> <span class="hidden sm:inline">Рассылка</span>
             </button>
         </div>
 
@@ -107,6 +132,30 @@
         <div id="tab-email" class="tab-content hidden animate-fade-in">
             <?php require __DIR__ . '/partials/email_sender.php'; ?>
         </div>
+
+        <!-- TAB 7: ROLES & PERMISSIONS -->
+        <?php require __DIR__ . '/partials/admin_roles_tab.php'; ?>
+
+        <!-- TAB 8: FILES -->
+        <?php require __DIR__ . '/partials/admin_files_tab.php'; ?>
+
+        <!-- TAB 9: LOGS -->
+        <?php require __DIR__ . '/partials/admin_logs_tab.php'; ?>
+
+        <!-- TAB 10: SESSIONS -->
+        <?php require __DIR__ . '/partials/admin_sessions_tab.php'; ?>
+
+        <!-- TAB 11: SYSTEM -->
+        <?php require __DIR__ . '/partials/admin_system_tab.php'; ?>
+
+        <!-- TAB 12: CMS -->
+        <?php require __DIR__ . '/partials/admin_cms_tab.php'; ?>
+
+        <!-- TAB 13: CRON & QUEUE -->
+        <?php require __DIR__ . '/partials/admin_cron_tab.php'; ?>
+
+        <!-- TAB 14: API KEYS -->
+        <?php require __DIR__ . '/partials/admin_api_tab.php'; ?>
     </main>
 
     <script src="/assets/js/app.js"></script>
@@ -129,6 +178,31 @@
             if (tab === 'security') { loadActivityLog(); }
             if (tab === 'settings') { loadTemplates(); loadSystemSettings(); loadBackups(); }
             if (tab === 'notifications') { loadAdminNotifications(); loadNotifSettings(); }
+            if (tab === 'roles') { loadRoles(); loadUsersForRoles(); }
+            if (tab === 'files') { loadFiles(); }
+            if (tab === 'logs') { loadLogs(); }
+            if (tab === 'sessions') { loadSessions(); }
+            if (tab === 'system') { loadSystemStatus(); }
+            if (tab === 'cms') { loadPages(); loadMenus(); }
+            if (tab === 'cron') { loadCronJobs(); }
+            if (tab === 'api') { loadApiKeys(); }
+        }
+        
+        // Helper functions
+        function closeModal(id) {
+            $('#' + id).addClass('hidden');
+        }
+        
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: 'bg-emerald-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            const toast = $(`<div class="fixed bottom-4 right-4 ${colors[type]} text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in">${message}</div>`);
+            $('body').append(toast);
+            setTimeout(() => toast.fadeOut(300, () => toast.remove()), 3000);
         }
         
         // Загружаем количество непрочитанных уведомлений при старте

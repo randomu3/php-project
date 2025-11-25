@@ -1,0 +1,292 @@
+<!-- TAB: ROLES & PERMISSIONS (RBAC) -->
+<div id="tab-roles" class="tab-content hidden animate-fade-in">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Roles List -->
+        <div class="glass-panel p-6 rounded-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <i data-lucide="shield" class="w-5 h-5 text-purple-400"></i>
+                    Роли
+                </h3>
+                <button onclick="showCreateRoleModal()" class="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-sm transition-colors">
+                    <i data-lucide="plus" class="w-4 h-4 inline"></i> Добавить
+                </button>
+            </div>
+            <div id="roles-list" class="space-y-3">
+                <div class="text-center text-slate-400 py-4">Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- Permissions -->
+        <div class="glass-panel p-6 rounded-2xl">
+            <h3 class="text-lg font-semibold flex items-center gap-2 mb-6">
+                <i data-lucide="key" class="w-5 h-5 text-emerald-400"></i>
+                Права доступа
+                <span id="selected-role-name" class="text-sm text-slate-400 ml-2"></span>
+            </h3>
+            <div id="permissions-list" class="space-y-4 max-h-[500px] overflow-y-auto">
+                <div class="text-center text-slate-400 py-4">Выберите роль для редактирования прав</div>
+            </div>
+            <div id="permissions-actions" class="hidden mt-4 pt-4 border-t border-white/10">
+                <button onclick="saveRolePermissions()" class="w-full px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg transition-colors">
+                    <i data-lucide="save" class="w-4 h-4 inline"></i> Сохранить права
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Roles Assignment -->
+    <div class="glass-panel p-6 rounded-2xl mt-6">
+        <h3 class="text-lg font-semibold flex items-center gap-2 mb-6">
+            <i data-lucide="users" class="w-5 h-5 text-blue-400"></i>
+            Назначение ролей пользователям
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <select id="user-select" class="bg-slate-800/50 border border-white/10 rounded-lg px-4 py-2 text-white">
+                <option value="">Выберите пользователя</option>
+            </select>
+            <select id="role-select" class="bg-slate-800/50 border border-white/10 rounded-lg px-4 py-2 text-white">
+                <option value="">Выберите роль</option>
+            </select>
+            <button onclick="assignRole()" class="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors">
+                <i data-lucide="user-plus" class="w-4 h-4 inline"></i> Назначить роль
+            </button>
+        </div>
+        <div id="user-roles-list" class="mt-4">
+            <div class="text-sm text-slate-400">Выберите пользователя для просмотра его ролей</div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Role Modal -->
+<div id="create-role-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+    <div class="bg-slate-900 border border-white/10 rounded-2xl p-6 w-full max-w-md mx-4">
+        <h3 class="text-lg font-semibold mb-4">Создать роль</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm text-slate-400 mb-1">Системное имя</label>
+                <input type="text" id="role-name" class="w-full bg-slate-800/50 border border-white/10 rounded-lg px-4 py-2 text-white" placeholder="manager">
+            </div>
+            <div>
+                <label class="block text-sm text-slate-400 mb-1">Отображаемое имя</label>
+                <input type="text" id="role-display-name" class="w-full bg-slate-800/50 border border-white/10 rounded-lg px-4 py-2 text-white" placeholder="Менеджер">
+            </div>
+            <div>
+                <label class="block text-sm text-slate-400 mb-1">Описание</label>
+                <textarea id="role-description" class="w-full bg-slate-800/50 border border-white/10 rounded-lg px-4 py-2 text-white" rows="2"></textarea>
+            </div>
+        </div>
+        <div class="flex gap-3 mt-6">
+            <button onclick="closeModal('create-role-modal')" class="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">Отмена</button>
+            <button onclick="createRole()" class="flex-1 px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg transition-colors">Создать</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedRoleId = null;
+let allPermissions = [];
+
+function loadRoles() {
+    $.get('/api/admin/roles.php?action=get_roles', function(response) {
+        if (response.success) {
+            let html = '';
+            response.roles.forEach(role => {
+                html += `
+                    <div class="flex items-center justify-between p-3 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors cursor-pointer ${selectedRoleId == role.id ? 'ring-2 ring-purple-500' : ''}" onclick="selectRole(${role.id}, '${role.display_name}')">
+                        <div>
+                            <div class="font-medium">${role.display_name}</div>
+                            <div class="text-sm text-slate-400">${role.name} • ${role.users_count} польз. • ${role.permissions_count} прав</div>
+                        </div>
+                        <div class="flex gap-2">
+                            ${role.id > 3 ? `<button onclick="event.stopPropagation(); deleteRole(${role.id})" class="p-1.5 text-red-400 hover:bg-red-500/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            $('#roles-list').html(html);
+            lucide.createIcons();
+            
+            // Populate role select
+            let options = '<option value="">Выберите роль</option>';
+            response.roles.forEach(role => {
+                options += `<option value="${role.id}">${role.display_name}</option>`;
+            });
+            $('#role-select').html(options);
+        }
+    });
+}
+
+function loadPermissions() {
+    $.get('/api/admin/roles.php?action=get_permissions', function(response) {
+        if (response.success) {
+            allPermissions = response.permissions;
+        }
+    });
+}
+
+function selectRole(roleId, roleName) {
+    selectedRoleId = roleId;
+    $('#selected-role-name').text('— ' + roleName);
+    loadRoles();
+    
+    $.get('/api/admin/roles.php?action=get_role_permissions&role_id=' + roleId, function(response) {
+        if (response.success) {
+            renderPermissions(response.permission_ids);
+            $('#permissions-actions').removeClass('hidden');
+        }
+    });
+}
+
+function renderPermissions(selectedIds) {
+    let grouped = {};
+    allPermissions.forEach(p => {
+        if (!grouped[p.category]) grouped[p.category] = [];
+        grouped[p.category].push(p);
+    });
+    
+    let html = '';
+    for (let category in grouped) {
+        html += `
+            <div class="mb-4">
+                <div class="text-sm font-medium text-slate-300 mb-2 capitalize">${category}</div>
+                <div class="space-y-2">
+        `;
+        grouped[category].forEach(p => {
+            const checked = selectedIds.includes(p.id) ? 'checked' : '';
+            html += `
+                <label class="flex items-center gap-3 p-2 bg-slate-800/30 rounded-lg cursor-pointer hover:bg-slate-800/50">
+                    <input type="checkbox" class="perm-checkbox rounded" value="${p.id}" ${checked}>
+                    <div>
+                        <div class="text-sm">${p.display_name}</div>
+                        <div class="text-xs text-slate-500">${p.description}</div>
+                    </div>
+                </label>
+            `;
+        });
+        html += '</div></div>';
+    }
+    $('#permissions-list').html(html);
+}
+
+function saveRolePermissions() {
+    if (!selectedRoleId) return;
+    
+    const permIds = [];
+    $('.perm-checkbox:checked').each(function() {
+        permIds.push($(this).val());
+    });
+    
+    $.post('/api/admin/roles.php', {
+        action: 'update_role_permissions',
+        role_id: selectedRoleId,
+        permission_ids: JSON.stringify(permIds)
+    }, function(response) {
+        if (response.success) {
+            showToast('Права сохранены', 'success');
+            loadRoles();
+        }
+    });
+}
+
+function showCreateRoleModal() {
+    $('#role-name, #role-display-name, #role-description').val('');
+    $('#create-role-modal').removeClass('hidden');
+}
+
+function createRole() {
+    $.post('/api/admin/roles.php', {
+        action: 'create_role',
+        name: $('#role-name').val(),
+        display_name: $('#role-display-name').val(),
+        description: $('#role-description').val()
+    }, function(response) {
+        if (response.success) {
+            closeModal('create-role-modal');
+            loadRoles();
+            showToast('Роль создана', 'success');
+        } else {
+            showToast(response.error, 'error');
+        }
+    });
+}
+
+function deleteRole(id) {
+    if (!confirm('Удалить эту роль?')) return;
+    $.post('/api/admin/roles.php', { action: 'delete_role', id: id }, function(response) {
+        if (response.success) {
+            loadRoles();
+            showToast('Роль удалена', 'success');
+        }
+    });
+}
+
+function loadUsersForRoles() {
+    $.get('/api/admin/users.php?action=list', function(response) {
+        if (response.success) {
+            let options = '<option value="">Выберите пользователя</option>';
+            response.users.forEach(u => {
+                options += `<option value="${u.id}">${u.username} (${u.email})</option>`;
+            });
+            $('#user-select').html(options);
+        }
+    });
+}
+
+$('#user-select').on('change', function() {
+    const userId = $(this).val();
+    if (!userId) return;
+    
+    $.get('/api/admin/roles.php?action=get_user_roles&user_id=' + userId, function(response) {
+        if (response.success) {
+            let html = '<div class="flex flex-wrap gap-2">';
+            response.roles.forEach(r => {
+                html += `
+                    <span class="inline-flex items-center gap-1 px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                        ${r.display_name}
+                        <button onclick="removeRole(${userId}, ${r.id})" class="hover:text-red-400"><i data-lucide="x" class="w-3 h-3"></i></button>
+                    </span>
+                `;
+            });
+            html += '</div>';
+            $('#user-roles-list').html(html);
+            lucide.createIcons();
+        }
+    });
+});
+
+function assignRole() {
+    const userId = $('#user-select').val();
+    const roleId = $('#role-select').val();
+    if (!userId || !roleId) return;
+    
+    $.post('/api/admin/roles.php', {
+        action: 'assign_user_role',
+        user_id: userId,
+        role_id: roleId
+    }, function(response) {
+        if (response.success) {
+            $('#user-select').trigger('change');
+            showToast('Роль назначена', 'success');
+        }
+    });
+}
+
+function removeRole(userId, roleId) {
+    $.post('/api/admin/roles.php', {
+        action: 'remove_user_role',
+        user_id: userId,
+        role_id: roleId
+    }, function(response) {
+        if (response.success) {
+            $('#user-select').trigger('change');
+            showToast('Роль удалена', 'success');
+        }
+    });
+}
+
+// Init
+$(document).ready(function() {
+    loadPermissions();
+});
+</script>

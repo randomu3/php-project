@@ -25,6 +25,9 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 # Копируем оптимизированную конфигурацию Opcache
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
+# Установка MySQL клиента для миграций
+RUN apt-get update && apt-get install -y default-mysql-client && rm -rf /var/lib/apt/lists/*
+
 # Установка Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -36,9 +39,14 @@ COPY src/composer.json src/composer.lock* ./
 # Устанавливаем зависимости
 RUN composer install --no-dev --optimize-autoloader || true
 
+# Копируем скрипт инициализации БД
+COPY docker/scripts/init-db.sh /usr/local/bin/init-db.sh
+RUN chmod +x /usr/local/bin/init-db.sh
+
 RUN chown -R www-data:www-data /var/www/html
 
-# Скрипт для установки зависимостей при старте (если их нет)
-RUN echo '#!/bin/bash\nif [ ! -d "vendor" ]; then composer install --no-dev --optimize-autoloader; fi\napache2-foreground' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
+# Скрипт для запуска: миграции + Apache
+COPY docker/scripts/start-dev.sh /usr/local/bin/start-dev.sh
+RUN chmod +x /usr/local/bin/start-dev.sh
 
-CMD ["/usr/local/bin/start.sh"]
+CMD ["/usr/local/bin/start-dev.sh"]
