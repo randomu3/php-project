@@ -1,47 +1,71 @@
 <?php
+/**
+ * Logout Handler
+ *
+ * Completely destroys user session and redirects to login page.
+ *
+ * @package AuraUI
+ */
 
-// НЕ подключаем config.php сразу, чтобы контролировать сессию
-session_start();
+// Prevent any output before headers
+ob_start();
 
-// Сохраняем user_id для логирования
-$userId = $_SESSION['user_id'] ?? null;
+// Start session if not started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// ПОЛНОСТЬЮ очищаем все данные сессии
+// Get session name before destroying
+$sessionName = session_name();
+$sessionId = session_id();
+
+// Clear all session variables
 $_SESSION = [];
 
-// Удаляем cookie сессии на клиенте (КРИТИЧНО!)
-$sessionName = session_name();
-if (isset($_COOKIE[$sessionName])) {
-    // Удаляем cookie несколькими способами для надежности
-    setcookie($sessionName, '', time() - 86400, '/');
-    setcookie($sessionName, '', time() - 86400, '/', $_SERVER['HTTP_HOST']);
-    setcookie($sessionName, '', 1, '/');
-    unset($_COOKIE[$sessionName]);
-}
+// Get cookie parameters
+$cookieParams = session_get_cookie_params();
 
-// Уничтожаем файл сессии на сервере
+// Delete the session cookie with all possible variations
+setcookie($sessionName, '', time() - 3600, '/');
+setcookie($sessionName, '', time() - 3600, '/', '');
+setcookie($sessionName, '', time() - 3600, '/', $_SERVER['HTTP_HOST'] ?? '');
+setcookie($sessionName, '', time() - 3600, $cookieParams['path'], $cookieParams['domain']);
+
+// Also try with secure and httponly flags
+setcookie($sessionName, '', [
+    'expires' => time() - 3600,
+    'path' => '/',
+    'domain' => '',
+    'secure' => false,
+    'httponly' => true,
+    'samesite' => 'Strict'
+]);
+
+// Remove from $_COOKIE superglobal
+unset($_COOKIE[$sessionName]);
+
+// Destroy the session
 session_destroy();
 
-// Теперь подключаем config для логирования
-require_once 'config.php';
-
-use AuraUI\Helpers\ActivityActions;
-
-use function logActivity;
-
-// Логируем выход (если был залогинен)
-if ($userId) {
-    // Создаем временную сессию только для логирования
-    session_start();
-    logActivity(ActivityActions::USER_LOGOUT, 'Пользователь вышел из системы', 'user', $userId);
-    session_destroy();
+// Delete session file manually if possible
+$sessionPath = session_save_path();
+if ($sessionPath && $sessionId) {
+    $sessionFile = $sessionPath . '/sess_' . $sessionId;
+    if (file_exists($sessionFile)) {
+        @unlink($sessionFile);
+    }
 }
 
-// Добавляем заголовки для предотвращения кеширования
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Pragma: no-cache");
-header("Expires: 0");
+// Clear output buffer
+ob_end_clean();
 
-// Редирект на страницу входа
-header('Location: /login');
+// Set aggressive no-cache headers
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0, private");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: Sat, 01 Jan 2000 00:00:00 GMT");
+header("Clear-Site-Data: \"cache\", \"cookies\", \"storage\"");
+
+// Redirect to login with cache-busting parameter
+header('Location: /login?t=' . time());
 exit;
