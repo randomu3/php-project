@@ -35,6 +35,14 @@
                 <p class="text-slate-400 text-sm">Введите свои данные для входа в аккаунт</p>
             </div>
 
+            <?php if (isset($_GET['expired']) || isset($_SESSION['session_expired'])): ?>
+                <?php unset($_SESSION['session_expired']); ?>
+                <div class="mb-6 p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-start gap-3">
+                    <i data-lucide="clock" class="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5"></i>
+                    <p class="text-sm text-yellow-200">Ваша сессия истекла из-за неактивности. Пожалуйста, войдите снова.</p>
+                </div>
+            <?php endif; ?>
+
             <?php if ($error): ?>
                 <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3 animate-pulse">
                     <i data-lucide="alert-circle" class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></i>

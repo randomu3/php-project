@@ -39,6 +39,11 @@
     <!-- Service Worker для PWA -->
     <script src="<?= CDN::js('assets/js/sw-register.js?v=' . ASSET_VERSION) ?>" defer></script>
     
+    <!-- Session Monitor (только для авторизованных) -->
+    <?php if (isLoggedIn()): ?>
+    <script src="<?= CDN::js('assets/js/session-monitor.js?v=' . ASSET_VERSION) ?>" defer></script>
+    <?php endif; ?>
+    
     <!-- Web App Manifest -->
     <link rel="manifest" href="/manifest.json">
     

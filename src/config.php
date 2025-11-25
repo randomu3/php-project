@@ -52,22 +52,30 @@ class_alias('AuraUI\Helpers\ActivityLogger', 'ActivityLogger');
 class_alias('AuraUI\Helpers\ImageUploader', 'ImageUploader');
 class_alias('AuraUI\Helpers\ActivityActions', 'ActivityActions');
 
+// Время жизни сессии (30 минут неактивности)
+define('SESSION_TIMEOUT', 1800);
+
 // Настройки безопасности сессии (до session_start)
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.cookie_secure', 0); // Поставить 1 если используете HTTPS
     ini_set('session.use_strict_mode', 1);
     ini_set('session.cookie_samesite', 'Strict');
-    ini_set('session.gc_maxlifetime', 3600); // 1 час
+    ini_set('session.gc_maxlifetime', SESSION_TIMEOUT);
     ini_set('session.cookie_lifetime', 0); // До закрытия браузера
     session_start();
 
     // Проверка валидности сессии
-    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 3600)) {
-        // Сессия истекла (более 1 часа неактивности)
+    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > SESSION_TIMEOUT)) {
+        // Сессия истекла - сохраняем флаг для показа сообщения
+        $sessionExpired = true;
+        $wasLoggedIn = isset($_SESSION['user_id']);
         session_unset();
         session_destroy();
         session_start();
+        if ($wasLoggedIn) {
+            $_SESSION['session_expired'] = true;
+        }
     }
     $_SESSION['LAST_ACTIVITY'] = time();
 }
@@ -219,4 +227,54 @@ function generateCSRFToken()
 function verifyCSRFToken($token)
 {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+/**
+ * Check if session is valid and not expired
+ *
+ * @return bool True if session is valid
+ */
+function isSessionValid(): bool
+{
+    if (!isset($_SESSION['user_id']) || !isset($_SESSION['LAST_ACTIVITY'])) {
+        return false;
+    }
+    
+    // Check if session has expired
+    if (time() - $_SESSION['LAST_ACTIVITY'] > SESSION_TIMEOUT) {
+        return false;
+    }
+    
+    return true;
+}
+
+/**
+ * Get remaining session time in seconds
+ *
+ * @return int Seconds remaining, 0 if expired
+ */
+function getSessionTimeRemaining(): int
+{
+    if (!isset($_SESSION['LAST_ACTIVITY'])) {
+        return 0;
+    }
+    
+    $remaining = SESSION_TIMEOUT - (time() - $_SESSION['LAST_ACTIVITY']);
+    return max(0, $remaining);
+}
+
+/**
+ * Force logout user and redirect
+ *
+ * @param string $reason Reason for logout
+ * @return void
+ */
+function forceLogout(string $reason = 'session_expired'): void
+{
+    session_unset();
+    session_destroy();
+    session_start();
+    $_SESSION['logout_reason'] = $reason;
+    header('Location: /login?expired=1');
+    exit;
 }
