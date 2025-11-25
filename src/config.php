@@ -29,6 +29,15 @@ require_once __DIR__ . '/helpers/ImageUploader.php';
 require_once __DIR__ . '/helpers/EmailValidator.php';
 require_once __DIR__ . '/helpers/AdminNotifier.php';
 
+// Подключаем контроллеры
+require_once __DIR__ . '/controllers/LoginController.php';
+require_once __DIR__ . '/controllers/RegisterController.php';
+require_once __DIR__ . '/controllers/ProfileController.php';
+require_once __DIR__ . '/controllers/AdminController.php';
+require_once __DIR__ . '/controllers/NotificationsController.php';
+require_once __DIR__ . '/controllers/ForgotPasswordController.php';
+require_once __DIR__ . '/controllers/ResetPasswordController.php';
+
 // Подключаем email функции
 require_once __DIR__ . '/email.php';
 
