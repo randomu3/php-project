@@ -61,13 +61,18 @@ class LoginController
 
         try {
             $db = getDB();
-            $stmt = $db->prepare("SELECT id, username, password_hash, failed_attempts, locked_until FROM users WHERE username = ? OR email = ?");
+            $stmt = $db->prepare("SELECT id, username, email, password_hash, failed_attempts, locked_until, email_verified FROM users WHERE username = ? OR email = ?");
             $stmt->execute([$username, $username]);
             $user = $stmt->fetch();
 
             if ($user) {
                 if ($user['locked_until'] && strtotime($user['locked_until']) > time()) {
                     return ['error' => 'Аккаунт временно заблокирован. Попробуйте позже.', 'username' => $username];
+                }
+
+                // Проверяем подтверждение email
+                if (!$user['email_verified']) {
+                    return ['error' => 'Email не подтверждён. Проверьте почту и перейдите по ссылке подтверждения.', 'username' => $username];
                 }
 
                 if (password_verify($password, $user['password_hash'])) {

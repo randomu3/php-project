@@ -170,13 +170,19 @@ function updateNotificationCount() {
     $.get('/api/notifications/count.php', function(response) {
         const count = response.count || 0;
         const badge = $('#notifications-button .notification-badge');
+        const prevCount = parseInt(badge.text()) || 0;
         
         if (count > 0) {
             if (badge.length) {
                 badge.text(count > 9 ? '9+' : count);
+                // Анимация при увеличении счётчика
+                if (count > prevCount) {
+                    badge.addClass('notification-pulse');
+                    setTimeout(() => badge.removeClass('notification-pulse'), 500);
+                }
             } else {
                 $('#notifications-button').append(
-                    '<span class="notification-badge absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">' +
+                    '<span class="notification-badge absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full notification-pulse">' +
                     (count > 9 ? '9+' : count) +
                     '</span>'
                 );
@@ -186,7 +192,35 @@ function updateNotificationCount() {
         }
     });
 }
+
+// Polling для обновления счётчика (каждые 60 секунд)
+let notificationPollingInterval = null;
+
+function startNotificationPolling() {
+    if (notificationPollingInterval) return;
+    
+    notificationPollingInterval = setInterval(function() {
+        updateNotificationCount();
+    }, 60000); // 60 секунд
+}
+
+// Инициализация при загрузке страницы
+$(document).ready(function() {
+    // Запускаем polling
+    startNotificationPolling();
+});
 </script>
+
+<style>
+@keyframes notification-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+.notification-pulse {
+    animation: notification-pulse 0.5s ease-in-out;
+}
+</style>
 
 <?php
 // Вспомогательная функция для отображения времени

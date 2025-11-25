@@ -85,13 +85,18 @@ class RegisterController
                 return ['error' => 'Пользователь с таким именем или email уже существует', 'success' => '', 'formData' => $formData];
             }
 
+            // Генерируем токен подтверждения
+            $verificationToken = bin2hex(random_bytes(32));
+            $tokenExpires = date('Y-m-d H:i:s', strtotime('+24 hours'));
+
             $password_hash = password_hash($password, PASSWORD_ARGON2ID);
-            $stmt = $db->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
-            $stmt->execute([$username, $email, $password_hash]);
+            $stmt = $db->prepare("INSERT INTO users (username, email, password_hash, email_verified, email_verification_token, email_verification_expires) VALUES (?, ?, ?, 0, ?, ?)");
+            $stmt->execute([$username, $email, $password_hash, $verificationToken, $tokenExpires]);
 
-            sendWelcomeEmail($email, $username);
+            // Отправляем письмо с подтверждением вместо welcome email
+            sendRegistrationVerificationEmail($email, $username, $verificationToken);
 
-            $success = 'Регистрация успешна! Проверьте email и можете войти.';
+            $success = 'Регистрация почти завершена! Проверьте email и перейдите по ссылке для подтверждения.';
             $formData = ['username' => '', 'email' => ''];
         } catch (PDOException) {
             return ['error' => 'Ошибка регистрации', 'success' => '', 'formData' => $formData];

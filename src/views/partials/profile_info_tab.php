@@ -4,19 +4,21 @@
         <div class="space-y-8">
             
             <!-- Аватар -->
-            <div class="flex justify-center">
-                <div class="relative group" id="avatar-container">
+            <div class="flex justify-center select-none">
+                <div class="relative group" id="avatar-container" style="user-select: none; -webkit-user-select: none;">
                     <?php if (!empty($user['avatar']) && file_exists('uploads/avatars/' . $user['avatar'])): ?>
                         <!-- Загруженный аватар -->
                         <img 
                             id="user-avatar-img"
                             src="/uploads/avatars/<?= htmlspecialchars($user['avatar']) ?>?t=<?= time() ?>" 
                             alt="Avatar" 
-                            class="w-32 h-32 rounded-full object-cover shadow-2xl shadow-purple-500/30 ring-4 ring-slate-900"
+                            class="w-32 h-32 rounded-full object-cover shadow-2xl shadow-purple-500/30 ring-4 ring-slate-900 pointer-events-none"
+                            draggable="false"
+                            oncontextmenu="return false;"
                         >
                     <?php else: ?>
                         <!-- Дефолтный аватар -->
-                        <div id="user-avatar-default" class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-bold shadow-2xl shadow-purple-500/30 ring-4 ring-slate-900">
+                        <div id="user-avatar-default" class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-bold shadow-2xl shadow-purple-500/30 ring-4 ring-slate-900 pointer-events-none">
                             <?= strtoupper(mb_substr($user['username'], 0, 1)) ?>
                         </div>
                     <?php endif; ?>
@@ -146,7 +148,9 @@
                             id="user-avatar-img"
                             src="${avatarUrl}" 
                             alt="Avatar" 
-                            class="w-32 h-32 rounded-full object-cover shadow-2xl shadow-purple-500/30 ring-4 ring-slate-900"
+                            class="w-32 h-32 rounded-full object-cover shadow-2xl shadow-purple-500/30 ring-4 ring-slate-900 pointer-events-none"
+                            draggable="false"
+                            oncontextmenu="return false;"
                         >
                         <div id="avatar-loading" class="hidden absolute inset-0 bg-black/50 rounded-full flex items-center justify-center">
                             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
@@ -162,7 +166,7 @@
                 } else {
                     // Показываем дефолтный аватар
                     container.html(`
-                        <div id="user-avatar-default" class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-bold shadow-2xl shadow-purple-500/30 ring-4 ring-slate-900">
+                        <div id="user-avatar-default" class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-bold shadow-2xl shadow-purple-500/30 ring-4 ring-slate-900 pointer-events-none">
                             ${initial}
                         </div>
                         <div id="avatar-loading" class="hidden absolute inset-0 bg-black/50 rounded-full flex items-center justify-center">
