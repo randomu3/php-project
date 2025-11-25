@@ -34,7 +34,7 @@ if [ -d "$MIGRATIONS_DIR" ]; then
     for file in $(ls -v $MIGRATIONS_DIR/*.sql 2>/dev/null); do
         filename=$(basename "$file")
         echo "   → $filename"
-        mysql -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" < "$file" 2>/dev/null || true
+        mysql -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" --default-character-set=utf8mb4 < "$file" 2>/dev/null || true
     done
     echo "✅ Migrations completed!"
 else
@@ -49,7 +49,7 @@ if [ "$APP_ENV" = "development" ] || [ "$APP_ENV" = "dev" ] || [ -z "$APP_ENV" ]
         for file in $(ls -v $SEEDS_DIR/*.sql 2>/dev/null); do
             filename=$(basename "$file")
             echo "   → $filename"
-            mysql -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" < "$file" 2>/dev/null || true
+            mysql -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" --default-character-set=utf8mb4 < "$file" 2>/dev/null || true
         done
         echo "✅ Seeds completed!"
     else

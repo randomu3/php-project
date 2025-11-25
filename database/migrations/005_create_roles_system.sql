@@ -1,4 +1,6 @@
 -- Миграция: Система ролей и прав доступа
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
 
 -- Таблица ролей
 CREATE TABLE IF NOT EXISTS roles (
