@@ -80,7 +80,7 @@ class AdminController
             // Устанавливаем кодировку для текущего соединения
             $db->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-            $users = $db->query("SELECT id, username, email, is_admin, created_at, last_login, failed_attempts, locked_until FROM users ORDER BY id DESC")->fetchAll();
+            $users = $db->query("SELECT id, username, email, is_admin, email_verified, created_at, last_login, failed_attempts, locked_until FROM users ORDER BY id DESC")->fetchAll();
             $tokens = $db->query("SELECT pr.id, pr.user_id, u.username, u.email, LEFT(pr.token, 20) as token_preview, pr.created_at, pr.expires_at, pr.used FROM password_resets pr JOIN users u ON pr.user_id = u.id ORDER BY pr.created_at DESC LIMIT 10")->fetchAll();
 
             // Загружаем только шаблоны подходящие для массовой рассылки
