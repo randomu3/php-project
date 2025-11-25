@@ -41,47 +41,47 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
         <!-- Navigation Tabs -->
         <div class="flex flex-wrap gap-2 mb-8">
-            <button onclick="switchTab('database')" id="btn-database" class="tab-btn active flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('database')" id="btn-database" title="База данных" class="tab-btn active flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="database" class="w-4 h-4"></i> <span class="hidden sm:inline">База данных</span>
             </button>
-            <button onclick="switchTab('analytics')" id="btn-analytics" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('analytics')" id="btn-analytics" title="Аналитика" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="bar-chart-3" class="w-4 h-4"></i> <span class="hidden sm:inline">Аналитика</span>
             </button>
-            <button onclick="switchTab('roles')" id="btn-roles" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('roles')" id="btn-roles" title="Роли и права доступа" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="shield-check" class="w-4 h-4"></i> <span class="hidden sm:inline">Роли</span>
             </button>
-            <button onclick="switchTab('sessions')" id="btn-sessions" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('sessions')" id="btn-sessions" title="Активные сессии пользователей" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="users" class="w-4 h-4"></i> <span class="hidden sm:inline">Сессии</span>
             </button>
-            <button onclick="switchTab('files')" id="btn-files" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('files')" id="btn-files" title="Файловый менеджер" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="folder" class="w-4 h-4"></i> <span class="hidden sm:inline">Файлы</span>
             </button>
-            <button onclick="switchTab('cms')" id="btn-cms" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('cms')" id="btn-cms" title="Управление контентом (страницы, меню)" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="file-text" class="w-4 h-4"></i> <span class="hidden sm:inline">CMS</span>
             </button>
-            <button onclick="switchTab('cron')" id="btn-cron" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('cron')" id="btn-cron" title="Cron задачи и очередь email" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="clock" class="w-4 h-4"></i> <span class="hidden sm:inline">Задачи</span>
             </button>
-            <button onclick="switchTab('api')" id="btn-api" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('api')" id="btn-api" title="API ключи" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="key" class="w-4 h-4"></i> <span class="hidden sm:inline">API</span>
             </button>
-            <button onclick="switchTab('logs')" id="btn-logs" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('logs')" id="btn-logs" title="Системные логи" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="scroll-text" class="w-4 h-4"></i> <span class="hidden sm:inline">Логи</span>
             </button>
-            <button onclick="switchTab('system')" id="btn-system" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('system')" id="btn-system" title="Мониторинг системы" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="server" class="w-4 h-4"></i> <span class="hidden sm:inline">Система</span>
             </button>
-            <button onclick="switchTab('security')" id="btn-security" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('security')" id="btn-security" title="Безопасность" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="shield" class="w-4 h-4"></i> <span class="hidden sm:inline">Безопасность</span>
             </button>
-            <button onclick="switchTab('settings')" id="btn-settings" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('settings')" id="btn-settings" title="Настройки и шаблоны email" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="settings" class="w-4 h-4"></i> <span class="hidden sm:inline">Настройки</span>
             </button>
-            <button onclick="switchTab('notifications')" id="btn-notifications" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('notifications')" id="btn-notifications" title="Уведомления администратора" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden sm:inline">Уведомления</span>
                 <span id="admin-notif-badge" class="px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full hidden">0</span>
             </button>
-            <button onclick="switchTab('email')" id="btn-email" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+            <button onclick="switchTab('email')" id="btn-email" title="Email рассылка" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="send" class="w-4 h-4"></i> <span class="hidden sm:inline">Рассылка</span>
             </button>
         </div>
