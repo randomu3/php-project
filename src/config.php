@@ -26,6 +26,7 @@ require_once __DIR__ . '/helpers/CDN.php';
 require_once __DIR__ . '/helpers/ActivityLogger.php';
 require_once __DIR__ . '/helpers/NotificationManager.php';
 require_once __DIR__ . '/helpers/ImageUploader.php';
+require_once __DIR__ . '/helpers/EmailValidator.php';
 require_once __DIR__ . '/helpers/AdminNotifier.php';
 
 // Подключаем email функции
