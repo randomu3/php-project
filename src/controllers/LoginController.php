@@ -109,8 +109,18 @@ class LoginController
                 if ($failed_attempts >= MAX_LOGIN_ATTEMPTS) {
                     $locked_until = date('Y-m-d H:i:s', time() + LOCKOUT_TIME);
                     $error = 'Слишком много неудачных попыток. Аккаунт заблокирован на 15 минут.';
+                    
+                    // Уведомляем админов о блокировке аккаунта
+                    $notifier = new \AuraUI\Helpers\AdminNotifier();
+                    $notifier->notifyAccountLocked($user['id'], $user['username'], LOCKOUT_TIME / 60);
                 } else {
                     $error = 'Неверное имя пользователя или пароль';
+                }
+                
+                // Уведомляем о подозрительной активности при 3+ попытках
+                if ($failed_attempts >= 3) {
+                    $notifier = new \AuraUI\Helpers\AdminNotifier();
+                    $notifier->notifySuspiciousActivity($ip, $failed_attempts, $username);
                 }
 
                 $stmt = $db->prepare("UPDATE users SET failed_attempts = ?, locked_until = ? WHERE id = ?");

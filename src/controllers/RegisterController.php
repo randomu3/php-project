@@ -96,6 +96,11 @@ class RegisterController
             // Отправляем письмо с подтверждением вместо welcome email
             sendRegistrationVerificationEmail($email, $username, $verificationToken);
 
+            // Уведомляем админов о новой регистрации
+            $userId = $db->lastInsertId();
+            $notifier = new \AuraUI\Helpers\AdminNotifier();
+            $notifier->notifyNewRegistration($userId, $username, $email);
+
             $success = 'Регистрация почти завершена! Проверьте email и перейдите по ссылке для подтверждения.';
             $formData = ['username' => '', 'email' => ''];
         } catch (PDOException) {

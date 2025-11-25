@@ -149,3 +149,282 @@ img[data-src]:not(.lazy-loaded) {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
+
+/* Custom Select Styling */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: rgba(15, 23, 42, 0.8);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+select:hover {
+    border-color: rgba(168, 85, 247, 0.4);
+    background-color: rgba(15, 23, 42, 0.9);
+}
+
+select:focus {
+    outline: none;
+    border-color: rgba(168, 85, 247, 0.6);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+}
+
+select option {
+    background-color: #1e293b;
+    color: white;
+    padding: 12px;
+}
+
+select option:hover,
+select option:checked {
+    background-color: rgba(168, 85, 247, 0.3);
+}
+
+/* Toggle Checkbox */
+.toggle-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 44px;
+    height: 24px;
+    background: rgba(71, 85, 105, 0.5);
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.toggle-checkbox::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: all 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-checkbox:checked {
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+}
+
+.toggle-checkbox:checked::before {
+    transform: translateX(20px);
+}
+
+.toggle-checkbox:hover {
+    background: rgba(71, 85, 105, 0.7);
+}
+
+.toggle-checkbox:checked:hover {
+    background: linear-gradient(135deg, #9333ea, #db2777);
+}
+
+/* Confirm Modal */
+.confirm-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+}
+
+.confirm-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.confirm-modal {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    max-width: 400px;
+    width: 100%;
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.3s ease;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.confirm-modal-overlay.active .confirm-modal {
+    transform: scale(1) translateY(0);
+}
+
+.confirm-modal-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.confirm-modal-icon.warning {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+}
+
+.confirm-modal-icon.danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.confirm-modal-icon.info {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+}
+
+.confirm-modal-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.confirm-modal-message {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.confirm-modal-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.confirm-modal-buttons button {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.confirm-modal-cancel {
+    background: rgba(71, 85, 105, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+}
+
+.confirm-modal-cancel:hover {
+    background: rgba(71, 85, 105, 0.5);
+}
+
+.confirm-modal-confirm {
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    border: none;
+    color: white;
+}
+
+.confirm-modal-confirm:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.confirm-modal-confirm.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.toast {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 300px;
+    max-width: 400px;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+    transform: translateX(120%);
+    transition: all 0.3s ease;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast.success {
+    border-left: 3px solid #22c55e;
+}
+
+.toast.error {
+    border-left: 3px solid #ef4444;
+}
+
+.toast.warning {
+    border-left: 3px solid #fbbf24;
+}
+
+.toast.info {
+    border-left: 3px solid #3b82f6;
+}
+
+.toast-icon {
+    flex-shrink: 0;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: white;
+}
+
+.toast-message {
+    font-size: 0.8125rem;
+    color: #94a3b8;
+    margin-top: 0.125rem;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s;
+}
+
+.toast-close:hover {
+    color: white;
+}

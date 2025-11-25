@@ -1,0 +1,9 @@
+[33m8c5567a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m refactor(api): migrate to PSR-4 namespace with use statements
+[33m3d3ce4e[m fix: improve mobile responsiveness for profile edit and password tabs
+[33m6d8417b[m feat: add email change protection with rate limiting and disposable email blocking
+[33mc03fe6a[m feat: add email verification for profile email changes and ignore uploads
+[33mae761f3[m chore: add uploads to .gitignore and remove from tracking
+[33m04170f9[m feat: add cookie consent banner to all pages
+[33mcb607fa[m feat: добавление новой почтовой верстки и испралвение работы сброса пароля
+[33m85cdf99[m feat: добалвение всего что только можно для скорости и по структурированию кода
+[33mee7d155[m feat: первая версия сайта базового

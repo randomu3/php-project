@@ -93,25 +93,138 @@ function loadTemplate() {
     }
 }
 
-// Показать уведомление
-function showNotification(message, type = 'info') {
-    const colors = {
-        success: 'bg-green-500/10 border-green-500/20 text-green-200',
-        error: 'bg-red-500/10 border-red-500/20 text-red-200',
-        warning: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-200',
-        info: 'bg-blue-500/10 border-blue-500/20 text-blue-200'
+// Toast Container
+function ensureToastContainer() {
+    if (!$('#toast-container').length) {
+        $('body').append('<div id="toast-container" class="toast-container"></div>');
+    }
+    return $('#toast-container');
+}
+
+// Показать Toast уведомление
+function showToast(message, type = 'info', title = null) {
+    const container = ensureToastContainer();
+    
+    const icons = {
+        success: '<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>',
+        error: '<svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>',
+        warning: '<svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+        info: '<svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
     };
     
-    const notification = $('<div>')
-        .addClass('fixed top-4 right-4 p-4 rounded-xl border z-50 ' + colors[type])
-        .text(message)
-        .appendTo('body');
+    const titles = {
+        success: 'Успешно',
+        error: 'Ошибка',
+        warning: 'Внимание',
+        info: 'Информация'
+    };
     
-    setTimeout(function() {
-        notification.fadeOut(300, function() {
-            $(this).remove();
+    const toast = $(`
+        <div class="toast ${type}">
+            <div class="toast-icon">${icons[type]}</div>
+            <div class="toast-content">
+                <div class="toast-title">${title || titles[type]}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" onclick="$(this).parent().remove()">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    `);
+    
+    container.append(toast);
+    
+    setTimeout(() => toast.addClass('show'), 10);
+    
+    setTimeout(() => {
+        toast.removeClass('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
+// Старая функция для совместимости
+function showNotification(message, type = 'info') {
+    showToast(message, type);
+}
+
+// Confirm Modal
+function showConfirm(options) {
+    return new Promise((resolve) => {
+        const {
+            title = 'Подтверждение',
+            message = 'Вы уверены?',
+            confirmText = 'Подтвердить',
+            cancelText = 'Отмена',
+            type = 'warning', // warning, danger, info
+            onConfirm = null,
+            onCancel = null
+        } = options;
+        
+        const icons = {
+            warning: '<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+            danger: '<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>',
+            info: '<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+        };
+        
+        // Remove existing modal
+        $('.confirm-modal-overlay').remove();
+        
+        const modal = $(`
+            <div class="confirm-modal-overlay">
+                <div class="confirm-modal">
+                    <div class="confirm-modal-icon ${type}">
+                        ${icons[type]}
+                    </div>
+                    <h3 class="confirm-modal-title">${title}</h3>
+                    <p class="confirm-modal-message">${message}</p>
+                    <div class="confirm-modal-buttons">
+                        <button class="confirm-modal-cancel">${cancelText}</button>
+                        <button class="confirm-modal-confirm ${type === 'danger' ? 'danger' : ''}">${confirmText}</button>
+                    </div>
+                </div>
+            </div>
+        `);
+        
+        $('body').append(modal);
+        
+        setTimeout(() => modal.addClass('active'), 10);
+        
+        const closeModal = (result) => {
+            modal.removeClass('active');
+            setTimeout(() => modal.remove(), 200);
+            resolve(result);
+        };
+        
+        modal.find('.confirm-modal-cancel').on('click', () => {
+            if (onCancel) onCancel();
+            closeModal(false);
         });
-    }, 3000);
+        
+        modal.find('.confirm-modal-confirm').on('click', () => {
+            if (onConfirm) onConfirm();
+            closeModal(true);
+        });
+        
+        modal.on('click', (e) => {
+            if ($(e.target).hasClass('confirm-modal-overlay')) {
+                if (onCancel) onCancel();
+                closeModal(false);
+            }
+        });
+        
+        $(document).on('keydown.confirmModal', (e) => {
+            if (e.key === 'Escape') {
+                $(document).off('keydown.confirmModal');
+                if (onCancel) onCancel();
+                closeModal(false);
+            }
+        });
+    });
+}
+
+// Async confirm helper
+async function confirmAction(message, title = 'Подтверждение', type = 'warning') {
+    return await showConfirm({ title, message, type });
 }
 
 // AJAX отправка форм (опционально)

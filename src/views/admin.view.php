@@ -49,6 +49,13 @@
             <button onclick="switchTab('security')" id="btn-security" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="shield" class="w-4 h-4"></i> Безопасность
             </button>
+            <button onclick="switchTab('settings')" id="btn-settings" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="settings" class="w-4 h-4"></i> Настройки
+            </button>
+            <button onclick="switchTab('notifications')" id="btn-notifications" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                <i data-lucide="bell" class="w-4 h-4"></i> Уведомления
+                <span id="admin-notif-badge" class="px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full hidden">0</span>
+            </button>
             <button onclick="switchTab('email')" id="btn-email" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
                 <i data-lucide="send" class="w-4 h-4"></i> Рассылка
             </button>
@@ -90,7 +97,13 @@
         <!-- TAB 3: SECURITY -->
         <?php require __DIR__ . '/partials/admin_security_tab.php'; ?>
 
-        <!-- TAB 3: EMAIL SENDER -->
+        <!-- TAB 4: SETTINGS & CONTENT -->
+        <?php require __DIR__ . '/partials/admin_settings_tab.php'; ?>
+
+        <!-- TAB 5: ADMIN NOTIFICATIONS -->
+        <?php require __DIR__ . '/partials/admin_notifications_tab.php'; ?>
+
+        <!-- TAB 6: EMAIL SENDER -->
         <div id="tab-email" class="tab-content hidden animate-fade-in">
             <?php require __DIR__ . '/partials/email_sender.php'; ?>
         </div>
@@ -114,7 +127,19 @@
             // Загружаем данные для вкладки
             if (tab === 'analytics') loadAnalytics();
             if (tab === 'security') { loadActivityLog(); }
+            if (tab === 'settings') { loadTemplates(); loadSystemSettings(); loadBackups(); }
+            if (tab === 'notifications') { loadAdminNotifications(); loadNotifSettings(); }
         }
+        
+        // Загружаем количество непрочитанных уведомлений при старте
+        function loadUnreadCount() {
+            $.get('/api/admin/notifications.php?action=get&limit=1&unread_only=1', function(response) {
+                if (response.success && response.unread_count > 0) {
+                    $('#admin-notif-badge').text(response.unread_count).removeClass('hidden');
+                }
+            });
+        }
+        loadUnreadCount();
 
         // Очистка URL от GET параметров после показа уведомления
         if (window.location.search.includes('email_sent') || 
