@@ -19,6 +19,7 @@ if (!isLoggedIn() || !isAdmin()) {
 
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
 $db = getDB();
+$db->exec("SET NAMES utf8mb4");
 
 switch ($action) {
     case 'list':
