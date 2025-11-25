@@ -2,47 +2,47 @@
 <div id="tab-analytics" class="tab-content hidden animate-fade-in">
     
     <!-- Карточки статистики -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="stats-cards">
-        <div class="glass-panel p-4 rounded-xl">
-            <p class="text-slate-400 text-xs mb-1">Регистраций сегодня</p>
-            <p class="text-2xl font-bold text-white" id="stat-reg-today">-</p>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6" id="stats-cards">
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <p class="text-slate-400 text-xs mb-1">Сегодня</p>
+            <p class="text-xl sm:text-2xl font-bold text-white" id="stat-reg-today">-</p>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
             <p class="text-slate-400 text-xs mb-1">За неделю</p>
-            <p class="text-2xl font-bold text-blue-400" id="stat-reg-week">-</p>
+            <p class="text-xl sm:text-2xl font-bold text-blue-400" id="stat-reg-week">-</p>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
             <p class="text-slate-400 text-xs mb-1">За месяц</p>
-            <p class="text-2xl font-bold text-purple-400" id="stat-reg-month">-</p>
+            <p class="text-xl sm:text-2xl font-bold text-purple-400" id="stat-reg-month">-</p>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
             <p class="text-slate-400 text-xs mb-1">Активность</p>
-            <p class="text-2xl font-bold text-green-400" id="stat-activity">-</p>
+            <p class="text-xl sm:text-2xl font-bold text-green-400" id="stat-activity">-</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6">
         <!-- График регистраций -->
-        <div class="glass-panel rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold flex items-center gap-2">
+        <div class="glass-panel rounded-2xl p-4 sm:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <h3 class="font-semibold flex items-center gap-2 text-sm sm:text-base">
                     <i data-lucide="trending-up" class="w-5 h-5 text-blue-400"></i> Регистрации
                 </h3>
-                <select id="chart-period" onchange="loadRegistrationsChart()" class="bg-slate-800 border border-white/10 rounded-lg px-3 py-1 text-sm">
-                    <option value="daily">По дням (30д)</option>
-                    <option value="weekly">По неделям (12н)</option>
+                <select id="chart-period" onchange="loadRegistrationsChart()" class="bg-slate-800 border border-white/10 rounded-lg px-2 sm:px-3 py-1 text-xs sm:text-sm">
+                    <option value="daily">По дням</option>
+                    <option value="weekly">По неделям</option>
                 </select>
             </div>
-            <div id="registrations-chart" class="h-48 flex items-end gap-1"></div>
+            <div id="registrations-chart" class="h-40 sm:h-48 flex items-end gap-0.5 sm:gap-1 overflow-x-auto"></div>
         </div>
 
         <!-- Активные пользователи -->
-        <div class="glass-panel rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold flex items-center gap-2">
-                    <i data-lucide="users" class="w-5 h-5 text-green-400"></i> Активные пользователи
+        <div class="glass-panel rounded-2xl p-4 sm:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <h3 class="font-semibold flex items-center gap-2 text-sm sm:text-base">
+                    <i data-lucide="users" class="w-5 h-5 text-green-400"></i> <span class="hidden sm:inline">Активные пользователи</span><span class="sm:hidden">Активные</span>
                 </h3>
-                <select id="active-period" onchange="loadActiveUsers()" class="bg-slate-800 border border-white/10 rounded-lg px-3 py-1 text-sm">
+                <select id="active-period" onchange="loadActiveUsers()" class="bg-slate-800 border border-white/10 rounded-lg px-2 sm:px-3 py-1 text-xs sm:text-sm">
                     <option value="1">Сегодня</option>
                     <option value="7" selected>7 дней</option>
                     <option value="30">30 дней</option>
@@ -64,29 +64,29 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <!-- Неподтверждённые аккаунты -->
         <div class="glass-panel rounded-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-                <h3 class="font-semibold flex items-center gap-2">
-                    <i data-lucide="mail-warning" class="w-5 h-5 text-yellow-400"></i> Неподтверждённые аккаунты
+            <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5 flex items-center justify-between">
+                <h3 class="font-semibold flex items-center gap-2 text-sm sm:text-base">
+                    <i data-lucide="mail-warning" class="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400"></i> <span class="hidden sm:inline">Неподтверждённые</span>
                     <span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full" id="unverified-count">0</span>
                 </h3>
             </div>
             <div class="overflow-x-auto max-h-64" id="unverified-list">
-                <div class="p-6 text-center text-slate-500">Загрузка...</div>
+                <div class="p-4 sm:p-6 text-center text-slate-500 text-sm">Загрузка...</div>
             </div>
         </div>
 
         <!-- Топ активных -->
         <div class="glass-panel rounded-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-white/5">
-                <h3 class="font-semibold flex items-center gap-2">
-                    <i data-lucide="award" class="w-5 h-5 text-purple-400"></i> Топ активных (7 дней)
+            <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5">
+                <h3 class="font-semibold flex items-center gap-2 text-sm sm:text-base">
+                    <i data-lucide="award" class="w-4 h-4 sm:w-5 sm:h-5 text-purple-400"></i> <span class="hidden sm:inline">Топ активных (7 дней)</span><span class="sm:hidden">Топ активных</span>
                 </h3>
             </div>
             <div class="overflow-x-auto max-h-64" id="top-active-list">
-                <div class="p-6 text-center text-slate-500">Загрузка...</div>
+                <div class="p-4 sm:p-6 text-center text-slate-500 text-sm">Загрузка...</div>
             </div>
         </div>
     </div>

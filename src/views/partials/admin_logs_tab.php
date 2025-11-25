@@ -1,52 +1,53 @@
 <!-- TAB: SYSTEM LOGS -->
 <div id="tab-logs" class="tab-content hidden animate-fade-in">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Critical</div>
-            <div id="logs-critical" class="text-2xl font-bold text-red-400">0</div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6">
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Critical</div>
+            <div id="logs-critical" class="text-xl sm:text-2xl font-bold text-red-400">0</div>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Errors</div>
-            <div id="logs-error" class="text-2xl font-bold text-orange-400">0</div>
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Errors</div>
+            <div id="logs-error" class="text-xl sm:text-2xl font-bold text-orange-400">0</div>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Warnings</div>
-            <div id="logs-warning" class="text-2xl font-bold text-yellow-400">0</div>
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Warnings</div>
+            <div id="logs-warning" class="text-xl sm:text-2xl font-bold text-yellow-400">0</div>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Info</div>
-            <div id="logs-info" class="text-2xl font-bold text-blue-400">0</div>
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Info</div>
+            <div id="logs-info" class="text-xl sm:text-2xl font-bold text-blue-400">0</div>
         </div>
     </div>
 
-    <div class="glass-panel p-6 rounded-2xl">
-        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div class="glass-panel p-4 sm:p-6 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <h3 class="text-lg font-semibold flex items-center gap-2">
                 <i data-lucide="scroll-text" class="w-5 h-5 text-orange-400"></i>
-                Системные логи
+                <span class="hidden sm:inline">Системные логи</span>
+                <span class="sm:hidden">Логи</span>
             </h3>
-            <div class="flex gap-2">
-                <select id="log-level-filter" class="bg-slate-800/50 border border-white/10 rounded-lg px-3 py-1.5 text-sm">
-                    <option value="">Все уровни</option>
+            <div class="flex flex-wrap gap-2">
+                <select id="log-level-filter" class="bg-slate-800/50 border border-white/10 rounded-lg px-2 sm:px-3 py-1.5 text-xs sm:text-sm">
+                    <option value="">Все</option>
                     <option value="critical">Critical</option>
                     <option value="error">Error</option>
                     <option value="warning">Warning</option>
                     <option value="info">Info</option>
                     <option value="debug">Debug</option>
                 </select>
-                <button onclick="exportLogs()" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-sm transition-colors">
-                    <i data-lucide="download" class="w-4 h-4 inline"></i> Экспорт
+                <button onclick="exportLogs()" class="px-2 sm:px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-xs sm:text-sm transition-colors">
+                    <i data-lucide="download" class="w-4 h-4 inline"></i>
                 </button>
-                <button onclick="showClearLogsModal()" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg text-sm transition-colors">
-                    <i data-lucide="trash-2" class="w-4 h-4 inline"></i> Очистить
+                <button onclick="showClearLogsModal()" class="px-2 sm:px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg text-xs sm:text-sm transition-colors">
+                    <i data-lucide="trash-2" class="w-4 h-4 inline"></i>
                 </button>
             </div>
         </div>
 
         <!-- Tabs -->
-        <div class="flex gap-2 mb-4">
-            <button onclick="switchLogTab('db')" id="log-tab-db" class="log-tab-btn px-4 py-2 rounded-lg text-sm bg-purple-500/20 text-purple-300">БД логи</button>
-            <button onclick="switchLogTab('php')" id="log-tab-php" class="log-tab-btn px-4 py-2 rounded-lg text-sm bg-slate-700 text-slate-300">PHP ошибки</button>
+        <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+            <button onclick="switchLogTab('db')" id="log-tab-db" class="log-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm bg-purple-500/20 text-purple-300 whitespace-nowrap">БД логи</button>
+            <button onclick="switchLogTab('php')" id="log-tab-php" class="log-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm bg-slate-700 text-slate-300 whitespace-nowrap">PHP ошибки</button>
         </div>
 
         <!-- DB Logs -->

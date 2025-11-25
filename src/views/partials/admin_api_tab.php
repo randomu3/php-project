@@ -1,32 +1,32 @@
 <!-- TAB: API KEYS -->
 <div id="tab-api" class="tab-content hidden animate-fade-in">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Активных ключей</div>
-            <div id="api-active-keys" class="text-2xl font-bold text-emerald-400">0</div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6">
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Активных ключей</div>
+            <div id="api-active-keys" class="text-xl sm:text-2xl font-bold text-emerald-400">0</div>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Запросов за 24ч</div>
-            <div id="api-requests-24h" class="text-2xl font-bold text-blue-400">0</div>
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Запросов 24ч</div>
+            <div id="api-requests-24h" class="text-xl sm:text-2xl font-bold text-blue-400">0</div>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Запросов за 7д</div>
-            <div id="api-requests-7d" class="text-2xl font-bold text-purple-400">0</div>
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Запросов 7д</div>
+            <div id="api-requests-7d" class="text-xl sm:text-2xl font-bold text-purple-400">0</div>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Среднее время ответа</div>
-            <div id="api-avg-time" class="text-2xl font-bold text-orange-400">0ms</div>
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Время ответа</div>
+            <div id="api-avg-time" class="text-xl sm:text-2xl font-bold text-orange-400">0ms</div>
         </div>
     </div>
 
-    <div class="glass-panel p-6 rounded-2xl">
-        <div class="flex items-center justify-between mb-6">
+    <div class="glass-panel p-4 sm:p-6 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <h3 class="text-lg font-semibold flex items-center gap-2">
                 <i data-lucide="key" class="w-5 h-5 text-yellow-400"></i>
                 API Ключи
             </h3>
-            <button onclick="showCreateApiKeyModal()" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-sm transition-colors">
-                <i data-lucide="plus" class="w-4 h-4 inline"></i> Создать ключ
+            <button onclick="showCreateApiKeyModal()" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-xs sm:text-sm transition-colors">
+                <i data-lucide="plus" class="w-4 h-4 inline"></i> <span class="hidden sm:inline">Создать ключ</span><span class="sm:hidden">Создать</span>
             </button>
         </div>
 
@@ -36,14 +36,14 @@
     </div>
 
     <!-- API Key Stats -->
-    <div id="api-key-stats" class="glass-panel p-6 rounded-2xl mt-6 hidden">
+    <div id="api-key-stats" class="glass-panel p-4 sm:p-6 rounded-2xl mt-6 hidden">
         <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-semibold" id="api-stats-title">Статистика ключа</h3>
+            <h3 class="text-base sm:text-lg font-semibold" id="api-stats-title">Статистика ключа</h3>
             <button onclick="$('#api-key-stats').addClass('hidden')" class="text-slate-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <div>
                 <h4 class="text-sm font-medium text-slate-400 mb-3">По эндпоинтам</h4>
                 <div id="api-stats-endpoints" class="space-y-2 max-h-[300px] overflow-y-auto"></div>

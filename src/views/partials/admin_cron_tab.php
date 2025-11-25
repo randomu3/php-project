@@ -1,20 +1,21 @@
 <!-- TAB: CRON & QUEUE -->
 <div id="tab-cron" class="tab-content hidden animate-fade-in">
     <!-- Sub-tabs -->
-    <div class="flex gap-2 mb-6">
-        <button onclick="switchCronTab('jobs')" id="cron-tab-jobs" class="cron-tab-btn px-4 py-2 rounded-lg text-sm bg-purple-500/20 text-purple-300">Cron задачи</button>
-        <button onclick="switchCronTab('queue')" id="cron-tab-queue" class="cron-tab-btn px-4 py-2 rounded-lg text-sm bg-slate-700 text-slate-300">Email очередь</button>
+    <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+        <button onclick="switchCronTab('jobs')" id="cron-tab-jobs" class="cron-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm bg-purple-500/20 text-purple-300 whitespace-nowrap">Cron задачи</button>
+        <button onclick="switchCronTab('queue')" id="cron-tab-queue" class="cron-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm bg-slate-700 text-slate-300 whitespace-nowrap">Email очередь</button>
     </div>
 
     <!-- Cron Jobs -->
     <div id="cron-jobs-container">
-        <div class="glass-panel p-6 rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <h3 class="text-lg font-semibold flex items-center gap-2">
                     <i data-lucide="clock" class="w-5 h-5 text-orange-400"></i>
-                    Cron задачи
+                    <span class="hidden sm:inline">Cron задачи</span>
+                    <span class="sm:hidden">Задачи</span>
                 </h3>
-                <button onclick="showCreateJobModal()" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-sm transition-colors">
+                <button onclick="showCreateJobModal()" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-xs sm:text-sm transition-colors">
                     <i data-lucide="plus" class="w-4 h-4 inline"></i> Добавить
                 </button>
             </div>
@@ -24,9 +25,9 @@
         </div>
 
         <!-- Job Logs -->
-        <div id="job-logs-panel" class="glass-panel p-6 rounded-2xl mt-6 hidden">
+        <div id="job-logs-panel" class="glass-panel p-4 sm:p-6 rounded-2xl mt-6 hidden">
             <div class="flex items-center justify-between mb-4">
-                <h4 class="font-semibold" id="job-logs-title">История выполнения</h4>
+                <h4 class="font-semibold text-sm sm:text-base" id="job-logs-title">История выполнения</h4>
                 <button onclick="$('#job-logs-panel').addClass('hidden')" class="text-slate-400 hover:text-white">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
@@ -37,43 +38,44 @@
 
     <!-- Email Queue -->
     <div id="email-queue-container" class="hidden">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="glass-panel p-4 rounded-xl">
-                <div class="text-sm text-slate-400">Ожидают</div>
-                <div id="queue-pending" class="text-2xl font-bold text-yellow-400">0</div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+            <div class="glass-panel p-3 sm:p-4 rounded-xl">
+                <div class="text-xs sm:text-sm text-slate-400">Ожидают</div>
+                <div id="queue-pending" class="text-xl sm:text-2xl font-bold text-yellow-400">0</div>
             </div>
-            <div class="glass-panel p-4 rounded-xl">
-                <div class="text-sm text-slate-400">Отправлено</div>
-                <div id="queue-sent" class="text-2xl font-bold text-emerald-400">0</div>
+            <div class="glass-panel p-3 sm:p-4 rounded-xl">
+                <div class="text-xs sm:text-sm text-slate-400">Отправлено</div>
+                <div id="queue-sent" class="text-xl sm:text-2xl font-bold text-emerald-400">0</div>
             </div>
-            <div class="glass-panel p-4 rounded-xl">
-                <div class="text-sm text-slate-400">Ошибки</div>
-                <div id="queue-failed" class="text-2xl font-bold text-red-400">0</div>
+            <div class="glass-panel p-3 sm:p-4 rounded-xl">
+                <div class="text-xs sm:text-sm text-slate-400">Ошибки</div>
+                <div id="queue-failed" class="text-xl sm:text-2xl font-bold text-red-400">0</div>
             </div>
-            <div class="glass-panel p-4 rounded-xl">
-                <div class="text-sm text-slate-400">В обработке</div>
-                <div id="queue-processing" class="text-2xl font-bold text-blue-400">0</div>
+            <div class="glass-panel p-3 sm:p-4 rounded-xl">
+                <div class="text-xs sm:text-sm text-slate-400">В обработке</div>
+                <div id="queue-processing" class="text-xl sm:text-2xl font-bold text-blue-400">0</div>
             </div>
         </div>
 
-        <div class="glass-panel p-6 rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <h3 class="text-lg font-semibold flex items-center gap-2">
                     <i data-lucide="mail" class="w-5 h-5 text-blue-400"></i>
-                    Очередь email
+                    <span class="hidden sm:inline">Очередь email</span>
+                    <span class="sm:hidden">Email</span>
                 </h3>
-                <div class="flex gap-2">
-                    <select id="queue-status-filter" class="bg-slate-800/50 border border-white/10 rounded-lg px-3 py-1.5 text-sm">
+                <div class="flex flex-wrap gap-2">
+                    <select id="queue-status-filter" class="bg-slate-800/50 border border-white/10 rounded-lg px-2 sm:px-3 py-1.5 text-xs sm:text-sm">
                         <option value="">Все</option>
                         <option value="pending">Ожидают</option>
                         <option value="sent">Отправлено</option>
                         <option value="failed">Ошибки</option>
                     </select>
-                    <button onclick="processEmailQueue()" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-sm transition-colors">
-                        <i data-lucide="play" class="w-4 h-4 inline"></i> Обработать
+                    <button onclick="processEmailQueue()" class="px-2 sm:px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg text-xs sm:text-sm transition-colors">
+                        <i data-lucide="play" class="w-4 h-4 inline"></i> <span class="hidden sm:inline">Обработать</span>
                     </button>
-                    <button onclick="showQueueEmailModal()" class="px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-sm transition-colors">
-                        <i data-lucide="plus" class="w-4 h-4 inline"></i> Добавить
+                    <button onclick="showQueueEmailModal()" class="px-2 sm:px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-xs sm:text-sm transition-colors">
+                        <i data-lucide="plus" class="w-4 h-4 inline"></i>
                     </button>
                 </div>
             </div>

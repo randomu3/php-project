@@ -1,20 +1,20 @@
-<div class="glass-panel rounded-2xl overflow-hidden mb-8">
-    <div class="px-6 py-5 border-b border-white/5 flex items-center justify-between">
-        <h2 class="text-lg font-semibold flex items-center gap-2">
+<div class="glass-panel rounded-2xl overflow-hidden mb-6 sm:mb-8">
+    <div class="px-4 sm:px-6 py-4 sm:py-5 border-b border-white/5 flex items-center justify-between">
+        <h2 class="text-base sm:text-lg font-semibold flex items-center gap-2">
             <i data-lucide="users" class="w-5 h-5 text-blue-400"></i> Пользователи
         </h2>
-        <span class="text-sm text-slate-500"><?= count($users) ?> пользователей</span>
+        <span class="text-xs sm:text-sm text-slate-500"><?= count($users) ?></span>
     </div>
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-400">
+        <table class="w-full text-left text-xs sm:text-sm text-slate-400 min-w-[700px]">
             <thead class="bg-slate-900/50 text-xs uppercase font-medium text-slate-300">
                 <tr>
-                    <th class="px-4 py-4">ID</th>
-                    <th class="px-4 py-4">Пользователь</th>
-                    <th class="px-4 py-4">Роль</th>
-                    <th class="px-4 py-4">Email</th>
-                    <th class="px-4 py-4">Статус</th>
-                    <th class="px-4 py-4 text-right">Действия</th>
+                    <th class="px-3 sm:px-4 py-3 sm:py-4">ID</th>
+                    <th class="px-3 sm:px-4 py-3 sm:py-4">Пользователь</th>
+                    <th class="px-3 sm:px-4 py-3 sm:py-4">Роль</th>
+                    <th class="px-3 sm:px-4 py-3 sm:py-4">Email</th>
+                    <th class="px-3 sm:px-4 py-3 sm:py-4">Статус</th>
+                    <th class="px-3 sm:px-4 py-3 sm:py-4 text-right">Действия</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-white/5">

@@ -2,18 +2,18 @@
 <div id="tab-security" class="tab-content hidden animate-fade-in">
     
     <!-- Подтабы -->
-    <div class="flex flex-wrap gap-2 mb-6">
-        <button onclick="switchSecurityTab('activity')" id="btn-sec-activity" class="sec-tab-btn active px-4 py-2 rounded-lg text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all">
-            <i data-lucide="activity" class="w-4 h-4 inline mr-1"></i> Журнал активности
+    <div class="flex flex-wrap gap-2 mb-6 overflow-x-auto pb-2">
+        <button onclick="switchSecurityTab('activity')" id="btn-sec-activity" class="sec-tab-btn active px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap">
+            <i data-lucide="activity" class="w-4 h-4 inline mr-1"></i> <span class="hidden sm:inline">Журнал</span>
         </button>
-        <button onclick="switchSecurityTab('attempts')" id="btn-sec-attempts" class="sec-tab-btn px-4 py-2 rounded-lg text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all">
-            <i data-lucide="shield-alert" class="w-4 h-4 inline mr-1"></i> Попытки входа
+        <button onclick="switchSecurityTab('attempts')" id="btn-sec-attempts" class="sec-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap">
+            <i data-lucide="shield-alert" class="w-4 h-4 inline mr-1"></i> <span class="hidden sm:inline">Попытки</span>
         </button>
-        <button onclick="switchSecurityTab('blocked')" id="btn-sec-blocked" class="sec-tab-btn px-4 py-2 rounded-lg text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all">
-            <i data-lucide="ban" class="w-4 h-4 inline mr-1"></i> Заблокированные IP
+        <button onclick="switchSecurityTab('blocked')" id="btn-sec-blocked" class="sec-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap">
+            <i data-lucide="ban" class="w-4 h-4 inline mr-1"></i> <span class="hidden sm:inline">IP</span>
         </button>
-        <button onclick="switchSecurityTab('sessions')" id="btn-sec-sessions" class="sec-tab-btn px-4 py-2 rounded-lg text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all">
-            <i data-lucide="monitor" class="w-4 h-4 inline mr-1"></i> Активные сессии
+        <button onclick="switchSecurityTab('sessions')" id="btn-sec-sessions" class="sec-tab-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap">
+            <i data-lucide="monitor" class="w-4 h-4 inline mr-1"></i> <span class="hidden sm:inline">Сессии</span>
         </button>
     </div>
 

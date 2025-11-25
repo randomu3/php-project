@@ -1,34 +1,35 @@
 <!-- TAB: ROLES & PERMISSIONS (RBAC) -->
 <div id="tab-roles" class="tab-content hidden animate-fade-in">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <!-- Roles List -->
-        <div class="glass-panel p-6 rounded-2xl">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-lg font-semibold flex items-center gap-2">
                     <i data-lucide="shield" class="w-5 h-5 text-purple-400"></i>
                     Роли
                 </h3>
-                <button onclick="showCreateRoleModal()" class="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-sm transition-colors">
-                    <i data-lucide="plus" class="w-4 h-4 inline"></i> Добавить
+                <button onclick="showCreateRoleModal()" class="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-xs sm:text-sm transition-colors">
+                    <i data-lucide="plus" class="w-4 h-4 inline"></i> <span class="hidden sm:inline">Добавить</span>
                 </button>
             </div>
             <div id="roles-list" class="space-y-3">
-                <div class="text-center text-slate-400 py-4">Загрузка...</div>
+                <div class="text-center text-slate-400 py-4 text-sm">Загрузка...</div>
             </div>
         </div>
 
         <!-- Permissions -->
-        <div class="glass-panel p-6 rounded-2xl">
-            <h3 class="text-lg font-semibold flex items-center gap-2 mb-6">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl">
+            <h3 class="text-base sm:text-lg font-semibold flex flex-wrap items-center gap-2 mb-6">
                 <i data-lucide="key" class="w-5 h-5 text-emerald-400"></i>
-                Права доступа
-                <span id="selected-role-name" class="text-sm text-slate-400 ml-2"></span>
+                <span class="hidden sm:inline">Права доступа</span>
+                <span class="sm:hidden">Права</span>
+                <span id="selected-role-name" class="text-sm text-slate-400"></span>
             </h3>
-            <div id="permissions-list" class="space-y-4 max-h-[500px] overflow-y-auto">
-                <div class="text-center text-slate-400 py-4">Выберите роль для редактирования прав</div>
+            <div id="permissions-list" class="space-y-4 max-h-[400px] sm:max-h-[500px] overflow-y-auto">
+                <div class="text-center text-slate-400 py-4 text-sm">Выберите роль для редактирования прав</div>
             </div>
             <div id="permissions-actions" class="hidden mt-4 pt-4 border-t border-white/10">
-                <button onclick="saveRolePermissions()" class="w-full px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg transition-colors">
+                <button onclick="saveRolePermissions()" class="w-full px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-lg transition-colors text-sm">
                     <i data-lucide="save" class="w-4 h-4 inline"></i> Сохранить права
                 </button>
             </div>
@@ -36,23 +37,24 @@
     </div>
 
     <!-- User Roles Assignment -->
-    <div class="glass-panel p-6 rounded-2xl mt-6">
-        <h3 class="text-lg font-semibold flex items-center gap-2 mb-6">
+    <div class="glass-panel p-4 sm:p-6 rounded-2xl mt-6">
+        <h3 class="text-base sm:text-lg font-semibold flex items-center gap-2 mb-6">
             <i data-lucide="users" class="w-5 h-5 text-blue-400"></i>
-            Назначение ролей пользователям
+            <span class="hidden sm:inline">Назначение ролей пользователям</span>
+            <span class="sm:hidden">Назначение ролей</span>
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4">
             <!-- User Search with Autocomplete -->
             <div class="relative">
-                <input type="text" id="user-search" class="w-full bg-slate-800/50 border border-white/10 rounded-lg px-4 py-2 text-white" placeholder="Поиск пользователя..." autocomplete="off">
+                <input type="text" id="user-search" class="w-full bg-slate-800/50 border border-white/10 rounded-lg px-3 sm:px-4 py-2 text-white text-sm" placeholder="Поиск пользователя..." autocomplete="off">
                 <input type="hidden" id="user-select-id">
                 <div id="user-search-results" class="absolute top-full left-0 right-0 mt-1 bg-slate-800 border border-white/10 rounded-lg shadow-xl z-50 hidden max-h-60 overflow-y-auto"></div>
             </div>
-            <select id="role-select" class="bg-slate-800/50 border border-white/10 rounded-lg px-4 py-2 text-white">
+            <select id="role-select" class="bg-slate-800/50 border border-white/10 rounded-lg px-3 sm:px-4 py-2 text-white text-sm">
                 <option value="">Выберите роль</option>
             </select>
-            <button onclick="assignRole()" class="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors">
-                <i data-lucide="user-plus" class="w-4 h-4 inline"></i> Назначить роль
+            <button onclick="assignRole()" class="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors text-sm sm:col-span-2 lg:col-span-1">
+                <i data-lucide="user-plus" class="w-4 h-4 inline"></i> Назначить
             </button>
         </div>
         <div id="user-roles-list" class="mt-4">

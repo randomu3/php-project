@@ -1,6 +1,6 @@
 <div class="max-w-3xl mx-auto">
-    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-        <i data-lucide="send" class="text-blue-400"></i> Ручная рассылка
+    <h2 class="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-2">
+        <i data-lucide="send" class="text-blue-400"></i> <span class="hidden sm:inline">Ручная рассылка</span><span class="sm:hidden">Рассылка</span>
     </h2>
 
     <?php if ($emailSent): ?>
@@ -17,19 +17,19 @@
     <?php endif; ?>
 
     <!-- Табы для выбора типа рассылки -->
-    <div class="flex gap-2 mb-6">
-        <button onclick="switchEmailMode('single')" id="btn-single" class="email-mode-btn active px-4 py-2 rounded-lg text-sm font-medium transition-all">
-            <i data-lucide="user" class="w-4 h-4 inline-block mr-2"></i>
-            Одному пользователю
+    <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+        <button onclick="switchEmailMode('single')" id="btn-single" class="email-mode-btn active px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap">
+            <i data-lucide="user" class="w-4 h-4 inline-block mr-1 sm:mr-2"></i>
+            <span class="hidden sm:inline">Одному пользователю</span><span class="sm:hidden">Одному</span>
         </button>
-        <button onclick="switchEmailMode('newsletter')" id="btn-newsletter" class="email-mode-btn px-4 py-2 rounded-lg text-sm font-medium transition-all">
-            <i data-lucide="users" class="w-4 h-4 inline-block mr-2"></i>
-            Рассылка новостей
+        <button onclick="switchEmailMode('newsletter')" id="btn-newsletter" class="email-mode-btn px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap">
+            <i data-lucide="users" class="w-4 h-4 inline-block mr-1 sm:mr-2"></i>
+            <span class="hidden sm:inline">Рассылка новостей</span><span class="sm:hidden">Рассылка</span>
         </button>
     </div>
 
     <!-- Форма для одного пользователя -->
-    <div id="single-email-form" class="glass-panel p-8 rounded-2xl">
+    <div id="single-email-form" class="glass-panel p-4 sm:p-8 rounded-2xl">
         <form method="POST" class="space-y-6">
             <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
             <input type="hidden" name="send_email" value="1">
@@ -57,7 +57,7 @@
     </div>
 
     <!-- Форма для рассылки новостей -->
-    <div id="newsletter-form" class="glass-panel p-8 rounded-2xl hidden">
+    <div id="newsletter-form" class="glass-panel p-4 sm:p-8 rounded-2xl hidden">
         <form method="POST" class="space-y-6" id="newsletterFormElement">
             <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
             <input type="hidden" name="send_newsletter" value="1">

@@ -38,77 +38,79 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
-        <!-- Navigation Tabs -->
-        <div class="flex flex-wrap gap-2 mb-8">
-            <button onclick="switchTab('database')" id="btn-database" title="База данных" class="tab-btn active flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="database" class="w-4 h-4"></i> <span class="hidden sm:inline">База данных</span>
-            </button>
-            <button onclick="switchTab('analytics')" id="btn-analytics" title="Аналитика" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="bar-chart-3" class="w-4 h-4"></i> <span class="hidden sm:inline">Аналитика</span>
-            </button>
-            <button onclick="switchTab('roles')" id="btn-roles" title="Роли и права доступа" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="shield-check" class="w-4 h-4"></i> <span class="hidden sm:inline">Роли</span>
-            </button>
-            <button onclick="switchTab('sessions')" id="btn-sessions" title="Активные сессии пользователей" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="users" class="w-4 h-4"></i> <span class="hidden sm:inline">Сессии</span>
-            </button>
-            <button onclick="switchTab('files')" id="btn-files" title="Файловый менеджер" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="folder" class="w-4 h-4"></i> <span class="hidden sm:inline">Файлы</span>
-            </button>
-            <button onclick="switchTab('cms')" id="btn-cms" title="Управление контентом (страницы, меню)" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="file-text" class="w-4 h-4"></i> <span class="hidden sm:inline">CMS</span>
-            </button>
-            <button onclick="switchTab('cron')" id="btn-cron" title="Cron задачи и очередь email" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="clock" class="w-4 h-4"></i> <span class="hidden sm:inline">Задачи</span>
-            </button>
-            <button onclick="switchTab('api')" id="btn-api" title="API ключи" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="key" class="w-4 h-4"></i> <span class="hidden sm:inline">API</span>
-            </button>
-            <button onclick="switchTab('logs')" id="btn-logs" title="Системные логи" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="scroll-text" class="w-4 h-4"></i> <span class="hidden sm:inline">Логи</span>
-            </button>
-            <button onclick="switchTab('system')" id="btn-system" title="Мониторинг системы" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="server" class="w-4 h-4"></i> <span class="hidden sm:inline">Система</span>
-            </button>
-            <button onclick="switchTab('security')" id="btn-security" title="Безопасность" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="shield" class="w-4 h-4"></i> <span class="hidden sm:inline">Безопасность</span>
-            </button>
-            <button onclick="switchTab('settings')" id="btn-settings" title="Настройки и шаблоны email" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="settings" class="w-4 h-4"></i> <span class="hidden sm:inline">Настройки</span>
-            </button>
-            <button onclick="switchTab('notifications')" id="btn-notifications" title="Уведомления администратора" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden sm:inline">Уведомления</span>
-                <span id="admin-notif-badge" class="px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full hidden">0</span>
-            </button>
-            <button onclick="switchTab('email')" id="btn-email" title="Email рассылка" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
-                <i data-lucide="send" class="w-4 h-4"></i> <span class="hidden sm:inline">Рассылка</span>
-            </button>
+    <main class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 pt-20 sm:pt-24">
+        <!-- Navigation Tabs - Horizontal scroll on mobile -->
+        <div class="overflow-x-auto -mx-2 px-2 pb-2 mb-6 sm:mb-8">
+            <div class="flex gap-1.5 sm:gap-2 sm:flex-wrap min-w-max sm:min-w-0">
+                <button onclick="switchTab('database')" id="btn-database" title="База данных" class="tab-btn active flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="database" class="w-4 h-4"></i> <span class="hidden md:inline">База данных</span>
+                </button>
+                <button onclick="switchTab('analytics')" id="btn-analytics" title="Аналитика" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i> <span class="hidden md:inline">Аналитика</span>
+                </button>
+                <button onclick="switchTab('roles')" id="btn-roles" title="Роли и права" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> <span class="hidden md:inline">Роли</span>
+                </button>
+                <button onclick="switchTab('sessions')" id="btn-sessions" title="Сессии" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="users" class="w-4 h-4"></i> <span class="hidden md:inline">Сессии</span>
+                </button>
+                <button onclick="switchTab('files')" id="btn-files" title="Файлы" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="folder" class="w-4 h-4"></i> <span class="hidden md:inline">Файлы</span>
+                </button>
+                <button onclick="switchTab('cms')" id="btn-cms" title="CMS" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> <span class="hidden md:inline">CMS</span>
+                </button>
+                <button onclick="switchTab('cron')" id="btn-cron" title="Задачи" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="clock" class="w-4 h-4"></i> <span class="hidden md:inline">Задачи</span>
+                </button>
+                <button onclick="switchTab('api')" id="btn-api" title="API" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="key" class="w-4 h-4"></i> <span class="hidden md:inline">API</span>
+                </button>
+                <button onclick="switchTab('logs')" id="btn-logs" title="Логи" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="scroll-text" class="w-4 h-4"></i> <span class="hidden md:inline">Логи</span>
+                </button>
+                <button onclick="switchTab('system')" id="btn-system" title="Система" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="server" class="w-4 h-4"></i> <span class="hidden md:inline">Система</span>
+                </button>
+                <button onclick="switchTab('security')" id="btn-security" title="Безопасность" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="shield" class="w-4 h-4"></i> <span class="hidden md:inline">Безопасность</span>
+                </button>
+                <button onclick="switchTab('settings')" id="btn-settings" title="Настройки" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="settings" class="w-4 h-4"></i> <span class="hidden md:inline">Настройки</span>
+                </button>
+                <button onclick="switchTab('notifications')" id="btn-notifications" title="Уведомления" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden md:inline">Уведомления</span>
+                    <span id="admin-notif-badge" class="px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full hidden">0</span>
+                </button>
+                <button onclick="switchTab('email')" id="btn-email" title="Рассылка" class="tab-btn flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 rounded-xl sm:rounded-full text-xs sm:text-sm font-medium border border-white/5 bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap">
+                    <i data-lucide="send" class="w-4 h-4"></i> <span class="hidden md:inline">Рассылка</span>
+                </button>
+            </div>
         </div>
 
         <!-- TAB 1: DATABASE & STATS -->
         <div id="tab-database" class="tab-content animate-fade-in">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i data-lucide="users" class="w-24 h-24 text-blue-500"></i>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
+                <div class="glass-panel p-4 sm:p-6 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-2 sm:p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="users" class="w-16 sm:w-24 h-16 sm:h-24 text-blue-500"></i>
                     </div>
-                    <p class="text-slate-400 text-sm font-medium mb-1">Всего пользователей</p>
-                    <h3 class="text-4xl font-bold text-white"><?= $stats['total_users'] ?></h3>
+                    <p class="text-slate-400 text-xs sm:text-sm font-medium mb-1">Всего пользователей</p>
+                    <h3 class="text-2xl sm:text-4xl font-bold text-white"><?= $stats['total_users'] ?></h3>
                 </div>
-                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i data-lucide="key" class="w-24 h-24 text-green-500"></i>
+                <div class="glass-panel p-4 sm:p-6 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-2 sm:p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="key" class="w-16 sm:w-24 h-16 sm:h-24 text-green-500"></i>
                     </div>
-                    <p class="text-slate-400 text-sm font-medium mb-1">Активные токены</p>
-                    <h3 class="text-4xl font-bold text-emerald-400"><?= $stats['active_tokens'] ?></h3>
+                    <p class="text-slate-400 text-xs sm:text-sm font-medium mb-1">Активные токены</p>
+                    <h3 class="text-2xl sm:text-4xl font-bold text-emerald-400"><?= $stats['active_tokens'] ?></h3>
                 </div>
-                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i data-lucide="check-circle" class="w-24 h-24 text-purple-500"></i>
+                <div class="glass-panel p-4 sm:p-6 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-2 sm:p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="check-circle" class="w-16 sm:w-24 h-16 sm:h-24 text-purple-500"></i>
                     </div>
-                    <p class="text-slate-400 text-sm font-medium mb-1">Использовано токенов</p>
-                    <h3 class="text-4xl font-bold text-purple-400"><?= $stats['used_tokens'] ?></h3>
+                    <p class="text-slate-400 text-xs sm:text-sm font-medium mb-1">Использовано токенов</p>
+                    <h3 class="text-2xl sm:text-4xl font-bold text-purple-400"><?= $stats['used_tokens'] ?></h3>
                 </div>
             </div>
 

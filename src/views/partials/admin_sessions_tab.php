@@ -1,64 +1,65 @@
 <!-- TAB: SESSIONS -->
 <div id="tab-sessions" class="tab-content hidden animate-fade-in">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Активных сессий</div>
-            <div id="active-sessions" class="text-2xl font-bold text-emerald-400">0</div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6">
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Активных сессий</div>
+            <div id="active-sessions" class="text-xl sm:text-2xl font-bold text-emerald-400">0</div>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">Активных пользователей</div>
-            <div id="active-users" class="text-2xl font-bold text-blue-400">0</div>
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">Пользователей</div>
+            <div id="active-users" class="text-xl sm:text-2xl font-bold text-blue-400">0</div>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">За 24 часа</div>
-            <div id="sessions-24h" class="text-2xl font-bold text-purple-400">0</div>
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">За 24 часа</div>
+            <div id="sessions-24h" class="text-xl sm:text-2xl font-bold text-purple-400">0</div>
         </div>
-        <div class="glass-panel p-4 rounded-xl">
-            <div class="text-sm text-slate-400">За 7 дней</div>
-            <div id="sessions-7d" class="text-2xl font-bold text-slate-400">0</div>
+        <div class="glass-panel p-3 sm:p-4 rounded-xl">
+            <div class="text-xs sm:text-sm text-slate-400">За 7 дней</div>
+            <div id="sessions-7d" class="text-xl sm:text-2xl font-bold text-slate-400">0</div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
         <!-- Devices -->
-        <div class="glass-panel p-6 rounded-2xl">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl">
             <h4 class="text-sm font-medium text-slate-400 mb-4">Устройства</h4>
             <div id="devices-chart" class="space-y-2"></div>
         </div>
         <!-- Browsers -->
-        <div class="glass-panel p-6 rounded-2xl">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl">
             <h4 class="text-sm font-medium text-slate-400 mb-4">Браузеры</h4>
             <div id="browsers-chart" class="space-y-2"></div>
         </div>
         <!-- Actions -->
-        <div class="glass-panel p-6 rounded-2xl">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl sm:col-span-2 lg:col-span-1">
             <h4 class="text-sm font-medium text-slate-400 mb-4">Действия</h4>
-            <div class="space-y-3">
-                <button onclick="loadLoginHistory()" class="w-full px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-sm transition-colors">
-                    <i data-lucide="history" class="w-4 h-4 inline"></i> История входов
+            <div class="flex sm:flex-col gap-2 sm:gap-3">
+                <button onclick="loadLoginHistory()" class="flex-1 sm:w-full px-3 sm:px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-xs sm:text-sm transition-colors">
+                    <i data-lucide="history" class="w-4 h-4 inline"></i> <span class="hidden sm:inline">История входов</span><span class="sm:hidden">История</span>
                 </button>
-                <button onclick="terminateAllInactive()" class="w-full px-4 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 rounded-lg text-sm transition-colors">
-                    <i data-lucide="user-x" class="w-4 h-4 inline"></i> Завершить неактивные
+                <button onclick="terminateAllInactive()" class="flex-1 sm:w-full px-3 sm:px-4 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 rounded-lg text-xs sm:text-sm transition-colors">
+                    <i data-lucide="user-x" class="w-4 h-4 inline"></i> <span class="hidden sm:inline">Завершить неактивные</span><span class="sm:hidden">Завершить</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="glass-panel p-6 rounded-2xl">
-        <div class="flex items-center justify-between mb-6">
+    <div class="glass-panel p-4 sm:p-6 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <h3 class="text-lg font-semibold flex items-center gap-2">
                 <i data-lucide="users" class="w-5 h-5 text-emerald-400"></i>
-                Активные сессии
+                <span class="hidden sm:inline">Активные сессии</span>
+                <span class="sm:hidden">Сессии</span>
             </h3>
-            <button onclick="loadSessions()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">
+            <button onclick="loadSessions()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs sm:text-sm transition-colors">
                 <i data-lucide="refresh-cw" class="w-4 h-4 inline"></i> Обновить
             </button>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full">
+        <div class="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+            <table class="w-full min-w-[600px]">
                 <thead>
-                    <tr class="text-left text-sm text-slate-400 border-b border-white/10">
+                    <tr class="text-left text-xs sm:text-sm text-slate-400 border-b border-white/10">
                         <th class="pb-3 font-medium">Пользователь</th>
                         <th class="pb-3 font-medium">IP</th>
                         <th class="pb-3 font-medium">Устройство</th>
@@ -67,7 +68,7 @@
                         <th class="pb-3 font-medium">Действия</th>
                     </tr>
                 </thead>
-                <tbody id="sessions-table" class="text-sm">
+                <tbody id="sessions-table" class="text-xs sm:text-sm">
                     <tr><td colspan="6" class="py-4 text-center text-slate-400">Загрузка...</td></tr>
                 </tbody>
             </table>
@@ -75,17 +76,18 @@
     </div>
 
     <!-- Login History -->
-    <div id="login-history-panel" class="glass-panel p-6 rounded-2xl mt-6 hidden">
+    <div id="login-history-panel" class="glass-panel p-4 sm:p-6 rounded-2xl mt-6 hidden">
         <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-semibold flex items-center gap-2">
+            <h3 class="text-base sm:text-lg font-semibold flex items-center gap-2">
                 <i data-lucide="history" class="w-5 h-5 text-blue-400"></i>
-                История входов
+                <span class="hidden sm:inline">История входов</span>
+                <span class="sm:hidden">История</span>
             </h3>
             <button onclick="$('#login-history-panel').addClass('hidden')" class="text-slate-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
             <table class="w-full">
                 <thead>
                     <tr class="text-left text-sm text-slate-400 border-b border-white/10">

@@ -1,19 +1,19 @@
 <div class="glass-panel rounded-2xl overflow-hidden">
-    <div class="px-6 py-5 border-b border-white/5">
-        <h2 class="text-lg font-semibold flex items-center gap-2">
-            <i data-lucide="key" class="w-5 h-5 text-green-400"></i> Токены сброса (Последние 10)
+    <div class="px-4 sm:px-6 py-4 sm:py-5 border-b border-white/5">
+        <h2 class="text-base sm:text-lg font-semibold flex items-center gap-2">
+            <i data-lucide="key" class="w-5 h-5 text-green-400"></i> <span class="hidden sm:inline">Токены сброса (Последние 10)</span><span class="sm:hidden">Токены</span>
         </h2>
     </div>
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-400">
+        <table class="w-full text-left text-xs sm:text-sm text-slate-400 min-w-[600px]">
             <thead class="bg-slate-900/50 text-xs uppercase font-medium text-slate-300">
                 <tr>
-                    <th class="px-6 py-4">ID</th>
-                    <th class="px-6 py-4">Пользователь</th>
-                    <th class="px-6 py-4">Токен (Preview)</th>
-                    <th class="px-6 py-4">Создан</th>
-                    <th class="px-6 py-4">Истекает</th>
-                    <th class="px-6 py-4">Статус</th>
+                    <th class="px-3 sm:px-6 py-3 sm:py-4">ID</th>
+                    <th class="px-3 sm:px-6 py-3 sm:py-4">Пользователь</th>
+                    <th class="px-3 sm:px-6 py-3 sm:py-4">Токен</th>
+                    <th class="px-3 sm:px-6 py-3 sm:py-4">Создан</th>
+                    <th class="px-3 sm:px-6 py-3 sm:py-4">Истекает</th>
+                    <th class="px-3 sm:px-6 py-3 sm:py-4">Статус</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-white/5">

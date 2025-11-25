@@ -1,25 +1,25 @@
 <!-- TAB: ADMIN NOTIFICATIONS -->
 <div id="tab-notifications" class="tab-content hidden animate-fade-in">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
         
         <!-- Notifications List -->
-        <div class="lg:col-span-2 glass-panel p-6 rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
+        <div class="xl:col-span-2 glass-panel p-4 sm:p-6 rounded-2xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <h3 class="text-lg font-semibold flex items-center gap-2">
                     <i data-lucide="bell" class="w-5 h-5 text-yellow-400"></i>
                     Уведомления
                     <span id="unread-badge" class="px-2 py-0.5 bg-red-500 text-white text-xs rounded-full hidden">0</span>
                 </h3>
                 <div class="flex gap-2">
-                    <select id="notif-filter" onchange="loadAdminNotifications()" class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-sm">
-                        <option value="">Все типы</option>
+                    <select id="notif-filter" onchange="loadAdminNotifications()" class="px-2 sm:px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs sm:text-sm">
+                        <option value="">Все</option>
                         <option value="registration">Регистрации</option>
                         <option value="security">Безопасность</option>
                         <option value="system">Система</option>
                         <option value="report">Отчёты</option>
                     </select>
-                    <button onclick="markAllRead()" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm transition-colors">
-                        Прочитать все
+                    <button onclick="markAllRead()" class="px-2 sm:px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs sm:text-sm transition-colors whitespace-nowrap">
+                        <span class="hidden sm:inline">Прочитать все</span><span class="sm:hidden">✓</span>
                     </button>
                 </div>
             </div>
@@ -39,10 +39,11 @@
         </div>
         
         <!-- Notification Settings -->
-        <div class="glass-panel p-6 rounded-2xl h-fit">
-            <h3 class="text-lg font-semibold flex items-center gap-2 mb-6">
+        <div class="glass-panel p-4 sm:p-6 rounded-2xl h-fit">
+            <h3 class="text-base sm:text-lg font-semibold flex items-center gap-2 mb-6">
                 <i data-lucide="settings-2" class="w-5 h-5 text-purple-400"></i>
-                Настройки уведомлений
+                <span class="hidden sm:inline">Настройки уведомлений</span>
+                <span class="sm:hidden">Настройки</span>
             </h3>
             
             <form id="notif-settings-form" class="space-y-4">
