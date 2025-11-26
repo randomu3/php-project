@@ -80,6 +80,11 @@
                     </div>
                 </div>
 
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <input type="checkbox" name="remember_me" class="w-4 h-4 rounded border-slate-600 bg-slate-900/50 text-purple-500 focus:ring-purple-500 focus:ring-offset-0 cursor-pointer">
+                    <span class="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">Запомнить меня</span>
+                </label>
+
                 <button type="submit" class="w-full text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-xl text-sm px-5 py-3.5 text-center shadow-lg shadow-purple-500/25 transition-all transform hover:-translate-y-0.5 mt-2">
                     Войти в аккаунт
                 </button>

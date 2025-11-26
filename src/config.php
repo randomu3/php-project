@@ -162,7 +162,64 @@ function getDB()
 function isLoggedIn()
 {
     // Проверяем не только наличие user_id, но и что он не пустой
-    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) && is_numeric($_SESSION['user_id']);
+    if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) && is_numeric($_SESSION['user_id'])) {
+        return true;
+    }
+    
+    // Пробуем автологин по remember_token
+    if (isset($_COOKIE['remember_token'])) {
+        return tryRememberMeLogin();
+    }
+    
+    return false;
+}
+
+/**
+ * Try to login user using remember me cookie
+ *
+ * @return bool True if auto-login successful
+ */
+function tryRememberMeLogin(): bool
+{
+    if (!isset($_COOKIE['remember_token'])) {
+        return false;
+    }
+    
+    try {
+        $token = $_COOKIE['remember_token'];
+        $hashedToken = hash('sha256', $token);
+        
+        $db = getDB();
+        $stmt = $db->prepare("
+            SELECT rt.user_id, u.username 
+            FROM remember_tokens rt 
+            JOIN users u ON rt.user_id = u.id 
+            WHERE rt.token_hash = ? AND rt.expires_at > NOW()
+        ");
+        $stmt->execute([$hashedToken]);
+        $result = $stmt->fetch();
+        
+        if ($result) {
+            // Автологин успешен
+            $_SESSION['user_id'] = $result['user_id'];
+            $_SESSION['username'] = $result['username'];
+            $_SESSION['LAST_ACTIVITY'] = time();
+            
+            // Обновляем last_login
+            $stmt = $db->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+            $stmt->execute([$result['user_id']]);
+            
+            return true;
+        }
+        
+        // Токен невалидный - удаляем cookie
+        setcookie('remember_token', '', time() - 3600, '/');
+        
+    } catch (PDOException $e) {
+        error_log("Remember me login failed: " . $e->getMessage());
+    }
+    
+    return false;
 }
 
 function requireLogin()

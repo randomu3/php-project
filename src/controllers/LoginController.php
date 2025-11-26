@@ -50,6 +50,7 @@ class LoginController
         $error = '';
         $username = sanitizeInput($_POST['username'] ?? '');
         $password = $_POST['password'] ?? '';
+        $rememberMe = isset($_POST['remember_me']);
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
@@ -97,7 +98,12 @@ class LoginController
                     logActivity(ActivityActions::USER_LOGIN, sprintf('Пользователь %s вошел в систему', $user['username']), 'user', $user['id']);
                     
                     // Сохраняем сессию в БД
-                    $this->saveSession($user['id'], $ip, $userAgent);
+                    $this->saveSession($user['id'], $ip, $userAgent, $rememberMe);
+
+                    // Если "Запомнить меня" - устанавливаем долгую сессию
+                    if ($rememberMe) {
+                        $this->setRememberMeCookie($user['id']);
+                    }
 
                     session_regenerate_id(true);
                     header('Location: /');
@@ -185,10 +191,11 @@ class LoginController
      * @param int $userId User ID
      * @param string $ip IP address
      * @param string $userAgent User agent string
+     * @param bool $rememberMe Whether to remember the session
      *
      * @return void
      */
-    private function saveSession(int $userId, string $ip, string $userAgent): void
+    private function saveSession(int $userId, string $ip, string $userAgent, bool $rememberMe = false): void
     {
         try {
             $db = getDB();
@@ -200,10 +207,47 @@ class LoginController
             $stmt->execute([$sessionId]);
             
             // Создаём новую запись
-            $stmt = $db->prepare("INSERT INTO user_sessions (user_id, session_id, ip_address, user_agent, device_info) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$userId, $sessionId, $ip, $userAgent, $deviceInfo]);
+            $stmt = $db->prepare("INSERT INTO user_sessions (user_id, session_id, ip_address, user_agent, device_info, remember_me) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$userId, $sessionId, $ip, $userAgent, $deviceInfo, $rememberMe ? 1 : 0]);
         } catch (PDOException $e) {
             error_log("Failed to save session: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Set remember me cookie for persistent login
+     *
+     * @param int $userId User ID
+     *
+     * @return void
+     */
+    private function setRememberMeCookie(int $userId): void
+    {
+        try {
+            $token = bin2hex(random_bytes(32));
+            $hashedToken = hash('sha256', $token);
+            $expiresAt = date('Y-m-d H:i:s', time() + 30 * 24 * 60 * 60); // 30 дней
+            
+            $db = getDB();
+            
+            // Удаляем старые токены пользователя
+            $stmt = $db->prepare("DELETE FROM remember_tokens WHERE user_id = ?");
+            $stmt->execute([$userId]);
+            
+            // Сохраняем новый токен
+            $stmt = $db->prepare("INSERT INTO remember_tokens (user_id, token_hash, expires_at) VALUES (?, ?, ?)");
+            $stmt->execute([$userId, $hashedToken, $expiresAt]);
+            
+            // Устанавливаем cookie
+            setcookie('remember_token', $token, [
+                'expires' => time() + 30 * 24 * 60 * 60,
+                'path' => '/',
+                'secure' => isset($_SERVER['HTTPS']),
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
+        } catch (PDOException $e) {
+            error_log("Failed to set remember me cookie: " . $e->getMessage());
         }
     }
 

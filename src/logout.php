@@ -19,6 +19,21 @@ if (session_status() === PHP_SESSION_NONE) {
 $sessionName = session_name();
 $sessionId = session_id();
 
+// Delete remember_token from database and cookie
+if (isset($_SESSION['user_id'])) {
+    try {
+        require_once __DIR__ . '/config.php';
+        $db = getDB();
+        $stmt = $db->prepare("DELETE FROM remember_tokens WHERE user_id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+    } catch (Exception $e) {
+        // Ignore errors during logout
+    }
+}
+
+// Delete remember_token cookie
+setcookie('remember_token', '', time() - 3600, '/');
+
 // Clear all session variables
 $_SESSION = [];
 
