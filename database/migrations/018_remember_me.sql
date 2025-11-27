@@ -10,5 +10,15 @@ CREATE TABLE IF NOT EXISTS remember_tokens (
     INDEX idx_expires (expires_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Add remember_me column to user_sessions
-ALTER TABLE user_sessions ADD COLUMN IF NOT EXISTS remember_me TINYINT(1) DEFAULT 0 AFTER device_info;
+-- Add remember_me column to user_sessions if not exists
+SET @dbname = DATABASE();
+SET @tablename = 'user_sessions';
+SET @columnname = 'remember_me';
+SET @preparedStatement = (SELECT IF(
+  (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = @dbname AND TABLE_NAME = @tablename AND COLUMN_NAME = @columnname) > 0,
+  'SELECT 1',
+  'ALTER TABLE user_sessions ADD COLUMN remember_me TINYINT(1) DEFAULT 0 AFTER device_info'
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
